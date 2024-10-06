@@ -13,6 +13,7 @@ import React from 'react'
 type Props = {}
 
 const Products = (props: Props) => {
+  const cards = Array(10).fill(null); // Creates an array with 10 empty slots
   return (
     <>
       <div className='font-bold text-5xl text-center mt-8'>Man Clothing collection</div>
@@ -32,65 +33,22 @@ const Products = (props: Props) => {
       </div>
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-4 p-10 md:p-0">
-        <div className="bg-white rounded-lg w-full">
-          <a href="#">
-            <img className="rounded-lg w-full" src="https://cdn.pixabay.com/photo/2024/04/29/04/21/neon-8726714_640.jpg" alt="" />
-          </a>
-          <div className="py-5">
+        {cards.map((_, index) => (
+          <div className="bg-white rounded-lg w-full">
             <a href="#">
-              <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900">PY Tshirt</h5>
+              <img className="rounded-lg w-full" src="https://cdn.pixabay.com/photo/2024/04/29/04/21/neon-8726714_640.jpg" alt="" />
             </a>
-            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Classic t-shirt for daily use.</p>
-            <div className="font-bold text-lg">
-              99$
+            <div className="py-5">
+              <a href="#">
+                <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900">PY Tshirt</h5>
+              </a>
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Classic t-shirt for daily use.</p>
+              <div className="font-bold text-lg">
+                99$
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="bg-white rounded-lg w-full">
-          <a href="#">
-            <img className="rounded-lg w-full" src="https://cdn.pixabay.com/photo/2024/04/29/04/21/neon-8726714_640.jpg" alt="" />
-          </a>
-          <div className="py-5">
-            <a href="#">
-              <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900">PY Tshirt</h5>
-            </a>
-            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Classic t-shirt for daily use.</p>
-            <div className="font-bold text-lg">
-              99$
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg w-full">
-          <a href="#">
-            <img className="rounded-lg w-full" src="https://cdn.pixabay.com/photo/2024/04/29/04/21/neon-8726714_640.jpg" alt="" />
-          </a>
-          <div className="py-5">
-            <a href="#">
-              <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900">PY Tshirt</h5>
-            </a>
-            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Classic t-shirt for daily use.</p>
-            <div className="font-bold text-lg">
-              99$
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg w-full">
-          <a href="#">
-            <img className="rounded-lg w-full" src="https://cdn.pixabay.com/photo/2024/04/29/04/21/neon-8726714_640.jpg" alt="" />
-          </a>
-          <div className="py-5">
-            <a href="#">
-              <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900">PY Tshirt</h5>
-            </a>
-            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Classic t-shirt for daily use.</p>
-            <div className="font-bold text-lg">
-              99$
-            </div>
-          </div>
-        </div>
+        ))}
 
       </div>
 
