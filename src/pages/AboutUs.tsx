@@ -92,7 +92,7 @@ const AboutUs = () => {
       </section>
 
       <footer className="bg-black/95 text-white text-center py-8">
-        <p>&copy; Copyright [Your Name] . All rights reserved. Made By Binary Boats⛵</p>
+        <p>&copy; Copyright IqDevHouse. All rights reserved.</p>
       </footer>
     </div>
   )
