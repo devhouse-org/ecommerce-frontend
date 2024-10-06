@@ -7,7 +7,7 @@ import { MyFooter } from './components/Footer'
 
 function App() {
   return (
-    <div className=''>
+    <div className='mb-10'>
       <MyNavbar />
       <Routes>
         <Route path="/" element={<Home />} />
