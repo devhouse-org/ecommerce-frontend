@@ -25,17 +25,17 @@ const Home = ({}: Props) => {
       ];
   return (
     <>
-    <div className='h-[80vh] flex justify-center bg-black/95'>
+    <div className='h-[100vh] lg:h-[80vh] flex justify-center bg-black/95'>
         <div className="header px-4 lg:px-0 container mx-auto relative">
             <div className='absolute bottom-[-200px] left-[-400px] w-[250px] h-[250px] bg-white/50 blur-[110px] rounded-full'/>
             <div className="flex  flex-col-reverse lg:flex-row h-full gap-x-4">
                 <div className="content flex-1 flex flex-col justify-start lg:justify-center text-center lg:text-left">
                     <h3 className='font-bold text-md text-gray-600'>New Product</h3>
-                    <h1 className='text-4xl mb-4 mt-1 font-bold text-brown-50'>Raizer Headset</h1>
-                    <p className='text-gray-500 max-w-[65%] self-center lg:self-auto'>Experience natural, lifelike audio and exceptional build quality made for the passionate music enthusiast.</p>
-                    <Button variant='filled' className='bg-green-800 w-fit mt-4 rounded-sm'>See Products</Button>
+                    <h1 className='text-4xl mb-4 mt-1 font-bold text-brown-50'>Coton Fabric</h1>
+                    <p className='text-gray-500 max-w-[75%] self-center lg:self-auto'>Stay warm in our new, easy-care sweaters. Perfect for dressing up or down, while staying comfortable all season long.</p>
+                    <Button variant='filled' className='bg-green-800 w-fit mt-4 self-center lg:self-start rounded-sm'>See Products</Button>
                 </div>
-                <div className="flex-1 flex justify-center items-center">
+                <div className="flex-1 flex justify-end items-center">
                     <div className="img-container h-[70%] w-full max-w-[500px] rounded-sm overflow-hidden">
                         <img className="w-full h-full hover:scale-[1.008] transition ease-in-out cursor-pointer object-cover" src="https://cdn.shopify.com/s/files/1/1368/3463/files/Stachehaus_E2_84_A2_Cuts_Fall24_LA-321_450x_crop_center@2x.progressive.jpg?v=1726606783" alt="" />
                     </div>

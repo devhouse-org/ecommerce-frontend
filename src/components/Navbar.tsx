@@ -54,12 +54,12 @@ export function MyNavbar() {
   );
  
   return (
-    <div className="container mx-auto ">
-      <Navbar className="fixed bg-black/0 z-10 shadow-sm rounded-none w-full border border-t-transparent border-r-transparent border-l-transparent border-b-gray-700">
+    <div className="bg-black w-full flex justify-center">
+      <Navbar className="fixed bg-black/85 mx-2 z-10 shadow-sm rounded-none lg:rounded-b-md w-full border-none">
         <div className="flex items-center justify-between text-blue-gray-900">
           <Link
             to="/"
-            className="mr-4 uppercase font-semibold mix-blend-multiply text-gray-100 cursor-pointer py-1.5"
+            className="mr-4 uppercase font-semibold text-white cursor-pointer py-1.5"
           >
             E-commerce
           </Link>
@@ -80,9 +80,8 @@ export function MyNavbar() {
 
 
           {/*  */}
-          {/* <div> */}
 
-            {/* <div className="flex lg:hidden">
+            <div className="flex lg:hidden">
             <div className="relative flex lg:hidden">
                 <div className="absolute flex lg:hidden right-0 rounded-full w-5 h-5 bg-green-700 justify-center items-center">
                     <p className="p-0 text-white font-bold text-[14px]">1</p>
@@ -106,8 +105,7 @@ export function MyNavbar() {
                 <Menu className="text-gray-100"/>
             )}
           </IconButton>
-            </div> */}
-          {/* </div>  */}
+            </div>
         </div>
         <Collapse open={openNav}>
           {navList}

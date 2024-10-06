@@ -16,7 +16,7 @@ const Products = (props: Props) => {
   const cards = Array(10).fill(null); // Creates an array with 10 empty slots
   return (
     <>
-      <div className='font-bold text-5xl text-center mt-8'>Man Clothing collection</div>
+      <div className='font-bold text-5xl text-center m8 pt-28'>Man Clothing collection</div>
       <div className='text-center mt-4 text-sm text-gray-500 mx-4'>
         Find everything you need to look and feel your best, and shop the latest mens fashion and lifestyle products
       </div>
