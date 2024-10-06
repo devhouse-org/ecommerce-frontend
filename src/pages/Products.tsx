@@ -16,12 +16,12 @@ const Products = (props: Props) => {
   return (
     <>
       <div className='font-bold text-5xl text-center mt-8'>Man Clothing collection</div>
-      <div className='text-center mt-4 text-sm text-gray-500'>
+      <div className='text-center mt-4 text-sm text-gray-500 mx-4'>
         Find everything you need to look and feel your best, and shop the latest mens fashion and lifestyle products
       </div>
 
       {/* category */}
-      <div className='flex justify-center gap-x-2 mt-10 overflow-x-auto whitespace-nowrap px-4 scrollbar-none'>
+      <div className='flex justify-center gap-x-2 mt-10 overflow-x-auto whitespace-nowrap px-4'>
         <a href="#" className="text-sm rounded-full px-5 py-2 text-white border-2 border-white bg-black">Tshirt</a>
         <a href="#" className="text-sm rounded-full px-5 py-2 text-black border-2 border-black">Jacket</a>
         <a href="#" className='text-sm rounded-full px-5 py-2 text-black border-2 border-black'>Pants</a>
