@@ -7,22 +7,26 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { ShoppingBasketIcon, ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 type Props = {};
 
 const Home = ({}: Props) => {
   const clothingBrands = [
     {
-      title: "Luxury",
+      title: "Dante Grey DB Luxury Coat",
+      img: "https://schoffa.com/cdn/shop/files/DanteGreyDBLuxuryCoat_Front.png?v=1725624733&width=1000",
       description:
         "High-end, premium brands known for their quality craftsmanship, exclusive designs, and expensive pricing. These brands often use luxurious materials and are frequently seen on runways.",
     },
     {
-      title: "Streetwear",
+      title: "Tuxedo",
+      img: "https://schoffa.com/cdn/shop/files/Schoffa-103-5.jpg?v=1717066632&width=2000",
       description:
         "Urban fashion brands that cater to youth culture with bold designs, casual wear, and strong influences from hip-hop, skateboarding, and sports. These brands emphasize comfort and individuality.",
     },
     {
-      title: "Sustainable",
+      title: "Wedding Suits",
+      img: "https://schoffa.com/cdn/shop/files/Schoffa12476.jpg?v=1716207338&width=1000",
       description:
         "Eco-friendly and ethically produced brands focusing on environmentally conscious materials, fair labor practices, and reducing their carbon footprint while still delivering stylish clothing.",
     },
@@ -62,15 +66,16 @@ const Home = ({}: Props) => {
         </div>
       </div>
 
-      <div className="container mx-auto my-4">
+      <div className="container mx-auto my-20">
         <div className="flex justify-center">
-          <h3 className="font-bold text-[24px] text-gray-800">Best Sellers</h3>
+          <h3 className="font-bold text-[24px] text-gray-800 mb-4">Best Sellers</h3>
         </div>
         <div className="best_sellers_categories flex justify-between gap-x-4">
           {clothingBrands.map((item) => (
-            <Card className="mt-6 flex-1 w-96">
-              <CardBody>
-                <Typography variant="h5" color="blue-gray" className="mb-2">
+            <Card className="mt-16 flex-1 w-96 border shadow-sm">
+              <CardBody className="relative">
+                <div className="absolute top-[-50px]"><img className="w-[70px] h-[70px] rounded-full object-cover" src={item.img} alt="" /></div>
+                <Typography variant="h5" color="blue-gray" className="mb-2 mt-4">
                   {item.title}
                 </Typography>
                 <Typography className="truncate line-clamp-3">
@@ -78,14 +83,12 @@ const Home = ({}: Props) => {
                 </Typography>
               </CardBody>
               <CardFooter className="pt-0">
-                <Typography
-                  as={"a"}
-                  variant="text"
-                  color="blue-gray"
-                  className="mb-2 underline text-green-600 font-bold"
+                <Link
+                to={"/"}
+                  className="cursor-pointer mb-2 underline text-green-600 font-bold"
                 >
-                  Read More
-                </Typography>
+                 View Product 
+                </Link>
               </CardFooter>
             </Card>
           ))}
