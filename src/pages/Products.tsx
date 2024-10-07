@@ -1,30 +1,38 @@
 
-import { Settings2 } from "lucide-react";
+import { CarTaxiFront, Heart, Settings2, ShoppingCart, TableColumnsSplit } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 import axiosInstance from "../utils/axiosInstance";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 type Category = {
-  id: number;
+  id: string;
   name: string;
 };
 
-type Product = {
-  id: number;
+type ProductT = {
+  id: string;
   title: string;
   description: string;
   price: number;
-  imgSrc: string;
+  imageUrl: string;
 };
+type ProductListProps = {
+  id: string
+  createdAt: string
+  updatedAt: string
+  name: string
+  products: ProductT[]
+}
 
 const fetchCategories = async () => {
   const response = await axiosInstance.get("/category");
   return response.data; // Return the data directly
 };
 
-const fetchProducts = async (categoryId: number) => {
+const fetchProducts = async (categoryId: string) => {
   const response = await axiosInstance.get(`/product/category/${categoryId}`);
   return response.data; // Return the data directly
 };
@@ -35,16 +43,16 @@ const Products = () => {
     queryFn: fetchCategories,
   });
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(categories[0]?.id); // Default to first category
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(categories[0]?.id); // Default to first category
 
-  const { data: products = [], isPending: productsLoading } = useQuery<Product[]>({
+  const { data: categoryWithProducts, isPending: productsLoading } = useQuery<ProductListProps>({
     queryKey: ["products", selectedCategoryId],
     queryFn: () => fetchProducts(selectedCategoryId),
     enabled: !!selectedCategoryId, // Only run the query if selectedCategoryId is available
   });
-   useEffect(()=>{
+  useEffect(() => {
     setSelectedCategoryId(categories[0]?.id); // Set default category when component mounts and there are categories available
-   },[categories])
+  }, [categories])
   // Show loading state for categories
   if (categoriesLoading) {
     return <div>Loading categories...</div>;
@@ -54,7 +62,6 @@ const Products = () => {
   if (productsLoading) {
     return <div>Loading products...</div>;
   }
-
   return (
     <>
       <div className="font-bold text-5xl text-center mt-28">
@@ -71,11 +78,10 @@ const Products = () => {
           <button
             key={category.id}
             onClick={() => setSelectedCategoryId(category.id)}
-            className={`text-sm rounded-full px-5 py-2 border-2 ${
-              selectedCategoryId === category.id
-                ? "text-white bg-black border-white"
-                : "text-black border-black"
-            }`}
+            className={`text-sm rounded-full px-5 py-2 border-2 ${selectedCategoryId === category.id
+              ? "text-white bg-black border-white"
+              : "text-black border-black"
+              }`}
           >
             {category.name}
           </button>
@@ -89,31 +95,26 @@ const Products = () => {
       </div>
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10 p-10 md:p-0">
-        {products.map((product) => (
-          <Card key={product.id} className="bg-white rounded-lg ">
-            <Link to={`/product/${product.id}`}>
-              {/* Link to product details */}
-              <CardHeader>
-                <img
-                  className="rounded-lg w-full"
-                  src={product.imgSrc}
-                  alt={product.title}
-                />
-              </CardHeader>
-            </Link>
+        {categoryWithProducts?.products.map((product) => (
+          <Card className="border-none shadow-none">
+            <CardHeader>
+              <img className="rounded" src={"https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="} alt={product.title} />
+            </CardHeader>
             <CardContent>
-              <Link to={`/product/${product.id}`}>
-                <p
-                  className="mb-2 font-bold tracking-tight text-gray-900"
-                >
-                  {product.title}
-                </p>
-              </Link>
-              <p className="mb-3 font-normal text-gray-700">
-                {product.description}
-              </p>
-              <div className="font-bold text-lg">{product.price}$</div>
+              <CardTitle className="font-bold mb-2 text-lg">Product Title</CardTitle>
+              <CardDescription>{product.description}</CardDescription>
             </CardContent>
+            <CardFooter className="flex items-center gap-1">
+              <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
+                <ShoppingCart size={20} />
+              </Button>
+              <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
+                <Heart size={20} />
+              </Button>
+              <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
+                <TableColumnsSplit size={20} />
+              </Button>
+            </CardFooter>
           </Card>
         ))}
       </div>
