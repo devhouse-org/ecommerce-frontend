@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  Navbar,
-  Collapse,
-  Typography,
-  Button,
-  IconButton,
-} from "@material-tailwind/react";
+
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
 
 export function MyNavbar() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -21,39 +16,33 @@ export function MyNavbar() {
 
   const navList = (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-      <Typography
-        as="li"
-        variant="small"
+      <li
         className="p-1 text-gray-100 font-bold"
       >
         <Link to="/" className="flex items-center">
           Home
         </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
+      </li>
+      <li
         className="p-1 text-gray-100 font-bold"
       >
         <Link to="/products" className="flex items-center">
           Products
         </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
+      </li>
+      <li
         className="p-1 text-gray-100 font-bold"
       >
         <Link to="/about" className="flex items-center">
           About
         </Link>
-      </Typography>
+      </li>
     </ul>
   );
 
   return (
     <div className="bg-black w-full flex justify-center">
-      <Navbar className="fixed bg-black/85 mx-2 z-10 shadow-sm rounded-none lg:rounded-b-md w-full border-none">
+      <nav className="fixed bg-black/85 mx-2 z-10 shadow-sm rounded-none lg:rounded-b-md w-full border-none">
         <div className="flex items-center justify-between text-blue-gray-900">
           <Link
             to="/"
@@ -67,7 +56,7 @@ export function MyNavbar() {
             <div className="absolute hidden lg:flex right-0 rounded-full w-5 h-5 bg-green-700 justify-center items-center">
               <p className="p-0 text-white font-bold text-[14px]">1</p>
             </div>
-            <Button variant="text" size="sm" className="hidden lg:inline-block">
+            <Button size="sm" className="hidden lg:inline-block">
               <ShoppingCart color="white" />
             </Button>
           </Link>
@@ -80,15 +69,13 @@ export function MyNavbar() {
                 <p className="p-0 text-white font-bold text-[14px]">1</p>
               </div>
               <Button
-                variant="text"
                 size="sm"
                 className="text-gray-100 inline-block lg:hidden"
               >
                 <ShoppingCart />
               </Button>
             </div>
-            <IconButton
-              variant="text"
+            <Button
               className="lg:hidden"
               onClick={() => setOpenNav(!openNav)}
             >
@@ -97,11 +84,11 @@ export function MyNavbar() {
               ) : (
                 <Menu className="text-gray-100" />
               )}
-            </IconButton>
+            </Button>
           </Link>
         </div>
-        <Collapse open={openNav}>{navList}</Collapse>
-      </Navbar>
+        {/* <Collapse open={openNav}>{navList}</Collapse> */}
+      </nav>
     </div>
   );
 }

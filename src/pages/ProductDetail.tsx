@@ -1,6 +1,7 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
 
 // Mock product list for recommendations
 const recommendedProducts = Array.from({ length: 4 }, (_, index) => ({
@@ -49,18 +50,18 @@ const ProductDetail = () => {
         </Card>
 
         <div className="mt-5 md:mt-0 md:ml-5 w-full md:w-1/2  ">
-          <Typography variant="h5" className="font-bold text-2xl mb-2">
+          <p  className="font-bold text-2xl mb-2">
             {product.title}
-          </Typography>
-          <Typography className="text-sm text-green-600 mb-4 ">
+          </p>
+          <p className="text-sm text-green-600 mb-4 ">
             NEW PRODUCT
-          </Typography>
-          <Typography className="mb-4 font-normal text-gray-700">
+          </p>
+          <p className="mb-4 font-normal text-gray-700">
             {product.description}
-          </Typography>
-          <Typography className="font-semibold text-xl mb-4">
+          </p>
+          <p className="font-semibold text-xl mb-4">
             ${product.price.toLocaleString()}
-          </Typography>
+          </p>
 
           <div className="flex items-center mb-4 gap-8">
             <div className="bg-gray-200">
@@ -78,7 +79,7 @@ const ProductDetail = () => {
                 +
               </button>
             </div>
-            <Button variant="filled" className="bg-green-800 w-fit rounded-sm">
+            <Button variant="default" className="bg-green-800 w-fit rounded-sm">
               ADD TO CART
             </Button>
           </div>
@@ -87,12 +88,11 @@ const ProductDetail = () => {
 
       {/* Recommended Products Section */}
       <div className="w-full mt-20">
-        <Typography
-          variant="h5"
+        <p
           className="font-bold text-3xl text-center mb-10"
         >
           You May Also Like
-        </Typography>
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {recommendedProducts.map((product) => (
             <Card key={product.id} className="bg-white rounded-lg">
@@ -103,22 +103,21 @@ const ProductDetail = () => {
                   alt={product.title}
                 />
               </Link>
-              <CardBody>
+              <CardContent>
                 <Link to={`/product/${product.id}`}>
-                  <Typography
-                    variant="h6"
+                  <p
                     className="mb-2 font-bold tracking-tight text-gray-900"
                   >
                     {product.title}
-                  </Typography>
+                  </p>
                 </Link>
-                <Typography className="mb-3 font-normal text-gray-700">
+                <p className="mb-3 font-normal text-gray-700">
                   {product.description}
-                </Typography>
-                <Typography className="font-bold text-lg">
+                </p>
+                <p className="font-bold text-lg">
                   ${product.price}
-                </Typography>
-              </CardBody>
+                </p>
+              </CardContent>
             </Card>
           ))}
         </div>

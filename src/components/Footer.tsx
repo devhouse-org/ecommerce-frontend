@@ -1,4 +1,3 @@
-import { Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
  
 export function MyFooter() {
@@ -34,9 +33,9 @@ export function MyFooter() {
           </li>
         </ul>
       </div>
-      <Typography color="blue-gray" className="mt-4 text-center font-normal">
+      <p color="blue-gray" className="mt-4 text-center font-normal">
         &copy; 2024 E-COMMERCE 
-      </Typography>
+      </p>
     </footer>
   );
 }

@@ -1,11 +1,6 @@
-import React from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Typography,
-} from "@material-tailwind/react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { ShoppingBasketIcon, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 type Props = {};
@@ -47,7 +42,7 @@ const Home = ({}: Props) => {
                 up or down, while staying comfortable all season long.
               </p>
               <Button
-                variant="filled"
+                variant="default"
                 className="bg-green-800 w-fit mt-4 self-center lg:self-start rounded-sm"
               >
                 See Products
@@ -73,15 +68,15 @@ const Home = ({}: Props) => {
         <div className="best_sellers_categories flex flex-wrap justify-between gap-x-4">
           {clothingBrands.map((item) => (
             <Card className="mt-16 flex-1 w-96 mx-2 border shadow-sm">
-              <CardBody className="relative">
+              <CardContent className="relative">
                 <div className="absolute top-[-50px]"><img className="w-[70px] h-[70px] rounded-full object-cover" src={item.img} alt="" /></div>
-                <Typography variant="h5" color="blue-gray" className="mb-2 mt-4">
+                <p color="blue-gray" className="mb-2 mt-4">
                   {item.title}
-                </Typography>
-                <Typography className="truncate line-clamp-3">
+                </p>
+                <p className="truncate line-clamp-3">
                   {item.description}
-                </Typography>
-              </CardBody>
+                </p>
+              </CardContent>
               <CardFooter className="pt-0">
                 <Link
                 to={"/"}

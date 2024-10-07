@@ -1,26 +1,59 @@
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-  Button,
-} from "@material-tailwind/react";
+
 import { Settings2 } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
+import { useQuery } from "@tanstack/react-query"; // Import useQuery
+import axiosInstance from "../utils/axiosInstance";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-type Props = {};
+type Category = {
+  id: number;
+  name: string;
+};
 
-const Products = (props: Props) => {
-  const cards = Array.from({ length: 10 }, (_, index) => ({
-    id: index + 1,
-    title: `PY Tshirt ${index + 1}`,
-    description: "Classic t-shirt for daily use.",
-    price: 99,
-    imgSrc:
-      "https://cdn.pixabay.com/photo/2024/04/29/04/21/neon-8726714_640.jpg",
-  })); // Creates an array of product objects
+type Product = {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  imgSrc: string;
+};
+
+const fetchCategories = async () => {
+  const response = await axiosInstance.get("/category");
+  return response.data; // Return the data directly
+};
+
+const fetchProducts = async (categoryId: number) => {
+  const response = await axiosInstance.get(`/product/category/${categoryId}`);
+  return response.data; // Return the data directly
+};
+
+const Products = () => {
+  const { data: categories = [], isPending: categoriesLoading } = useQuery<Category[]>({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(categories[0]?.id); // Default to first category
+
+  const { data: products = [], isPending: productsLoading } = useQuery<Product[]>({
+    queryKey: ["products", selectedCategoryId],
+    queryFn: () => fetchProducts(selectedCategoryId),
+    enabled: !!selectedCategoryId, // Only run the query if selectedCategoryId is available
+  });
+   useEffect(()=>{
+    setSelectedCategoryId(categories[0]?.id); // Set default category when component mounts and there are categories available
+   },[categories])
+  // Show loading state for categories
+  if (categoriesLoading) {
+    return <div>Loading categories...</div>;
+  }
+
+  // Show loading state for products
+  if (productsLoading) {
+    return <div>Loading products...</div>;
+  }
 
   return (
     <>
@@ -32,23 +65,21 @@ const Products = (props: Props) => {
         men's fashion and lifestyle products
       </div>
 
-      {/* category */}
+      {/* Category selection */}
       <div className="flex justify-center gap-x-2 mt-10 overflow-x-auto whitespace-nowrap px-4">
-        {["Tshirt", "Jacket", "Pants", "Hoodie", "Short"].map(
-          (category, index) => (
-            <Link
-              to={`/${category.toLowerCase()}`}
-              key={index}
-              className={`text-sm rounded-full px-5 py-2 border-2 ${
-                category === "Tshirt"
-                  ? "text-white bg-black border-white"
-                  : "text-black border-black"
-              }`}
-            >
-              {category}
-            </Link>
-          )
-        )}
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setSelectedCategoryId(category.id)}
+            className={`text-sm rounded-full px-5 py-2 border-2 ${
+              selectedCategoryId === category.id
+                ? "text-white bg-black border-white"
+                : "text-black border-black"
+            }`}
+          >
+            {category.name}
+          </button>
+        ))}
         <Link
           to="/settings"
           className="border-2 rounded-full px-2 border-black"
@@ -58,33 +89,32 @@ const Products = (props: Props) => {
       </div>
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10 p-10 md:p-0">
-        {cards.map((card) => (
-          <div key={card.id} className="bg-white rounded-lg ">
-            <Link to={`/product/${card.id}`}>
+        {products.map((product) => (
+          <Card key={product.id} className="bg-white rounded-lg ">
+            <Link to={`/product/${product.id}`}>
               {/* Link to product details */}
               <CardHeader>
                 <img
                   className="rounded-lg w-full"
-                  src={card.imgSrc}
-                  alt={card.title}
+                  src={product.imgSrc}
+                  alt={product.title}
                 />
               </CardHeader>
             </Link>
-            <CardBody>
-              <Link to={`/product/${card.id}`}>
-                <Typography
-                  variant="h5"
+            <CardContent>
+              <Link to={`/product/${product.id}`}>
+                <p
                   className="mb-2 font-bold tracking-tight text-gray-900"
                 >
-                  {card.title}
-                </Typography>
+                  {product.title}
+                </p>
               </Link>
-              <Typography className="mb-3 font-normal text-gray-700">
-                {card.description}
-              </Typography>
-              <div className="font-bold text-lg">{card.price}$</div>
-            </CardBody>
-          </div>
+              <p className="mb-3 font-normal text-gray-700">
+                {product.description}
+              </p>
+              <div className="font-bold text-lg">{product.price}$</div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </>
