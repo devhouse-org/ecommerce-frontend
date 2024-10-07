@@ -70,9 +70,9 @@ const Home = ({}: Props) => {
         <div className="flex justify-center">
           <h3 className="font-bold text-[24px] text-gray-800 mb-4">Best Sellers</h3>
         </div>
-        <div className="best_sellers_categories flex justify-between gap-x-4">
+        <div className="best_sellers_categories flex flex-wrap justify-between gap-x-4">
           {clothingBrands.map((item) => (
-            <Card className="mt-16 flex-1 w-96 border shadow-sm">
+            <Card className="mt-16 flex-1 w-96 mx-2 border shadow-sm">
               <CardBody className="relative">
                 <div className="absolute top-[-50px]"><img className="w-[70px] h-[70px] rounded-full object-cover" src={item.img} alt="" /></div>
                 <Typography variant="h5" color="blue-gray" className="mb-2 mt-4">

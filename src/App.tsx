@@ -6,6 +6,7 @@ import { MyNavbar } from "./components/Navbar";
 import { MyFooter } from "./components/Footer";
 import ProductDetail from "./pages/ProductDetail";
 import AboutUs from "./pages/AboutUs";
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/checkout" element={<Checkout />} />
+        
+
       </Routes>
       <MyFooter />
     </div>
