@@ -73,7 +73,7 @@ const Products = () => {
       </div>
 
       {/* Category selection */}
-      <div className="flex justify-center gap-x-2 mt-10 overflow-x-auto whitespace-nowrap px-4">
+      <div className="flex justify-start xl:justify-center gap-x-2 mt-10 overflow-x-auto whitespace-nowrap px-4">
         {categories.map((category) => (
           <button
             key={category.id}
@@ -94,17 +94,17 @@ const Products = () => {
         </Link>
       </div>
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10 p-10 md:p-0">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10 ">
         {categoryWithProducts?.products.map((product) => (
           <Card className="border-none shadow-none">
             <CardHeader>
-              <img className="rounded" src={"https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="} alt={product.title} />
+              <img className="rounded-t-lg" src={"https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="} alt={product.title} />
             </CardHeader>
             <CardContent>
               <CardTitle className="font-bold mb-2 text-lg">Product Title</CardTitle>
               <CardDescription>{product.description}</CardDescription>
             </CardContent>
-            <CardFooter className="flex items-center gap-1">
+            <CardFooter className="">
               <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
                 <ShoppingCart size={20} />
               </Button>
