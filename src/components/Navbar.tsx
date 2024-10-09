@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useCartStore } from "../store/index"; // Import Zustand store
 import { ShoppingCart } from "lucide-react"; // Import ShoppingCart from Lucide
@@ -7,15 +7,34 @@ import CartPopup from "../components/CartPopup"; // Import the CartPopup compone
 const Navbar = () => {
   const { cart } = useCartStore(); // Access the cart state from Zustand
   const [isPopupOpen, setPopupOpen] = useState(false); // State to manage popup visibility
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Calculate the total number of items in the cart
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   const togglePopup = () => setPopupOpen(!isPopupOpen); // Toggle popup visibility
 
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if the user has scrolled more than 50px from the top
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    // Add event listener for scroll
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+
   return (
-    <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className={`fixed w-full z-10 py-4 transition-colors duration-300 ${
+      isScrolled ? "bg-black" : "bg-black/85"
+    }`}>
+      <div className="container mx-auto px-8 flex justify-between items-center">
         <NavLink to="/">
           <div className="text-white text-2xl">MyApp</div>
         </NavLink>
@@ -25,7 +44,7 @@ const Navbar = () => {
             to="/"
             className={({ isActive }) =>
               isActive
-                ? "text-yellow-500 hover:text-yellow-300"
+                ? "font-bold text-green-600 hover:text-green-500 transition ease-in-out"
                 : "text-gray-300 hover:text-white"
             }
           >
@@ -35,7 +54,7 @@ const Navbar = () => {
             to="/about"
             className={({ isActive }) =>
               isActive
-                ? "text-yellow-500 hover:text-yellow-300"
+                ? "font-bold text-green-600 hover:text-green-500 transition ease-in-out"
                 : "text-gray-300 hover:text-white"
             }
           >
@@ -45,7 +64,7 @@ const Navbar = () => {
             to="/products"
             className={({ isActive }) =>
               isActive
-                ? "text-yellow-500 hover:text-yellow-300"
+                ? "font-bold text-green-600 hover:text-green-500 transition ease-in-out"
                 : "text-gray-300 hover:text-white"
             }
           >
@@ -55,7 +74,7 @@ const Navbar = () => {
             to="/contact"
             className={({ isActive }) =>
               isActive
-                ? "text-yellow-500 hover:text-yellow-300"
+                ? "font-bold text-green-600 hover:text-green-500 transition ease-in-out"
                 : "text-gray-300 hover:text-white"
             }
           >

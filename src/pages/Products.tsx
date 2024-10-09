@@ -100,7 +100,7 @@ const Products = () => {
 
   return (
     <>
-      <div className="font-bold text-5xl text-center mt-28">
+      <div className="font-bold text-5xl text-center pt-28">
         Man Clothing Collection
       </div>
       <div className="text-center mt-4 text-sm text-gray-500 mx-4">
