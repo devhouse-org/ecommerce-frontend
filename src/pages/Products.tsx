@@ -31,7 +31,7 @@ type ProductT = {
   title: string;
   description: string;
   price: number;
-  imgSrc: string;
+  imageUrl: string;
 };
 
 type ProductListProps = {
@@ -139,18 +139,18 @@ const Products = () => {
           <Card key={product.id} className="border-2 shadow-none">
             <Link to={`/product/${product.id}`}>
               <CardHeader>
-                {/* <img
-                className="rounded-t-lg"
-                src={
-                  "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
-                }
-                alt={product.title}
-              /> */}
                 <img
+                  className="rounded-t-lg"
+                  src={
+                    "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
+                  }
+                  alt={product.title}
+                />
+                {/* <img
                   className="rounded-t-lg"
                   src={product.imageUrl}
                   alt={product.title}
-                />
+                /> */}
               </CardHeader>
             </Link>
             <Link to={`/product/${product.id}`}>
