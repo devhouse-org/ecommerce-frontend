@@ -16,11 +16,12 @@ interface CartState {
   addToCart: (product: Omit<CartItem, "quantity">, quantity: number) => void; // Use Omit to exclude quantity from product
   removeFromCart: (productId: number) => void; // or string
   clearCart: () => void;
+  getTotalPrice: () => number; // Add a method to get total price
 }
 
 // Create the Zustand store
 export const useCartStore = create<CartState>((set) => ({
-  cart: [],
+  cart: JSON.parse(localStorage.getItem("cart") || "[]"), // Load initial state from localStorage
 
   // Add product to cart
   addToCart: (product, quantity) =>
@@ -29,25 +30,38 @@ export const useCartStore = create<CartState>((set) => ({
 
       if (existingProduct) {
         // If the product exists in the cart, update its quantity
-        return {
-          cart: state.cart.map((item) =>
-            item.id === product.id
-              ? { ...item, quantity: item.quantity + quantity }
-              : item
-          ),
-        };
+        const updatedCart = state.cart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+        localStorage.setItem("cart", JSON.stringify(updatedCart)); // Persist updated cart
+        return { cart: updatedCart };
       } else {
         // Otherwise, add the product to the cart
-        return { cart: [...state.cart, { ...product, quantity }] };
+        const newCart = [...state.cart, { ...product, quantity }];
+        localStorage.setItem("cart", JSON.stringify(newCart)); // Persist new cart
+        return { cart: newCart };
       }
     }),
 
   // Remove product from cart
   removeFromCart: (productId) =>
-    set((state) => ({
-      cart: state.cart.filter((item) => item.id !== productId),
-    })),
+    set((state) => {
+      const updatedCart = state.cart.filter((item) => item.id !== productId);
+      localStorage.setItem("cart", JSON.stringify(updatedCart)); // Persist updated cart
+      return { cart: updatedCart };
+    }),
 
   // Clear the cart
-  clearCart: () => set({ cart: [] }),
+  clearCart: () => {
+    localStorage.removeItem("cart"); // Remove from localStorage
+    return { cart: [] };
+  },
+
+  // Get total price of items in cart
+  getTotalPrice: () =>
+    set((state) =>
+      state.cart.reduce((total, item) => total + item.price * item.quantity, 0)
+    ),
 }));

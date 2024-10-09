@@ -63,7 +63,7 @@ const Navbar = () => {
                 : "text-gray-300 hover:text-white"
             }
           >
-            Services
+            Products
           </NavLink>
           <NavLink
             to="/contact"

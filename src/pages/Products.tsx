@@ -1,11 +1,24 @@
-
-import { CarTaxiFront, Heart, Settings2, ShoppingCart, TableColumnsSplit } from "lucide-react";
+import {
+  CarTaxiFront,
+  Heart,
+  Settings2,
+  ShoppingCart,
+  TableColumnsSplit,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 import axiosInstance from "../utils/axiosInstance";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useCartStore } from "../utils/CartContext"; // Adjust the path as necessary
 
 type Category = {
   id: string;
@@ -19,13 +32,14 @@ type ProductT = {
   price: number;
   imageUrl: string;
 };
+
 type ProductListProps = {
-  id: string
-  createdAt: string
-  updatedAt: string
-  name: string
-  products: ProductT[]
-}
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  products: ProductT[];
+};
 
 const fetchCategories = async () => {
   const response = await axiosInstance.get("/category");
@@ -38,21 +52,32 @@ const fetchProducts = async (categoryId: string) => {
 };
 
 const Products = () => {
-  const { data: categories = [], isPending: categoriesLoading } = useQuery<Category[]>({
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery<
+    Category[]
+  >({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(categories[0]?.id); // Default to first category
+  const { addToCart } = useCartStore(); // Access addToCart from Zustand store
 
-  const { data: categoryWithProducts, isPending: productsLoading } = useQuery<ProductListProps>({
-    queryKey: ["products", selectedCategoryId],
-    queryFn: () => fetchProducts(selectedCategoryId),
-    enabled: !!selectedCategoryId, // Only run the query if selectedCategoryId is available
-  });
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    string | undefined
+  >(undefined); // Default to undefined
+
+  const { data: categoryWithProducts, isLoading: productsLoading } =
+    useQuery<ProductListProps>({
+      queryKey: ["products", selectedCategoryId],
+      queryFn: () => fetchProducts(selectedCategoryId!),
+      enabled: !!selectedCategoryId, // Only run the query if selectedCategoryId is available
+    });
+
   useEffect(() => {
-    setSelectedCategoryId(categories[0]?.id); // Set default category when component mounts and there are categories available
-  }, [categories])
+    if (categories.length > 0) {
+      setSelectedCategoryId(categories[0]?.id); // Set default category when component mounts and there are categories available
+    }
+  }, [categories]);
+
   // Show loading state for categories
   if (categoriesLoading) {
     return <div>Loading categories...</div>;
@@ -62,6 +87,7 @@ const Products = () => {
   if (productsLoading) {
     return <div>Loading products...</div>;
   }
+
   return (
     <>
       <div className="font-bold text-5xl text-center mt-28">
@@ -69,7 +95,7 @@ const Products = () => {
       </div>
       <div className="text-center mt-4 text-sm text-gray-500 mx-4">
         Find everything you need to look and feel your best, and shop the latest
-        men's fashion and lifestyle products
+        men's fashion and lifestyle products.
       </div>
 
       {/* Category selection */}
@@ -78,10 +104,11 @@ const Products = () => {
           <button
             key={category.id}
             onClick={() => setSelectedCategoryId(category.id)}
-            className={`text-sm rounded-full px-5 py-2 border-2 ${selectedCategoryId === category.id
-              ? "text-white bg-black border-white"
-              : "text-black border-black"
-              }`}
+            className={`text-sm rounded-full px-5 py-2 border-2 ${
+              selectedCategoryId === category.id
+                ? "text-white bg-black border-white"
+                : "text-black border-black"
+            }`}
           >
             {category.name}
           </button>
@@ -94,18 +121,36 @@ const Products = () => {
         </Link>
       </div>
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10 ">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10">
         {categoryWithProducts?.products.map((product) => (
-          <Card className="border-none shadow-none">
+          <Card key={product.id} className="border-none shadow-none">
             <CardHeader>
-              <img className="rounded-t-lg" src={"https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="} alt={product.title} />
+              <img
+                className="rounded-t-lg"
+                src={
+                  "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
+                }
+                alt={product.title}
+              />
+              {/* <img
+                className="rounded-t-lg"
+
+                src={product.imageUrl}
+                alt={product.title}
+              /> */}
             </CardHeader>
             <CardContent>
-              <CardTitle className="font-bold mb-2 text-lg">Product Title</CardTitle>
+              <CardTitle className="font-bold mb-2 text-lg">
+                {product.title}
+              </CardTitle>
               <CardDescription>{product.description}</CardDescription>
+              <p className="font-bold text-lg">${product.price.toFixed(2)}</p>
             </CardContent>
             <CardFooter className="">
-              <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
+              <Button
+                className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
+                onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
+              >
                 <ShoppingCart size={20} />
               </Button>
               <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
