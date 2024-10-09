@@ -20,7 +20,7 @@ const ProductDetail = () => {
   // Mock product data
   const product = {
     id,
-    title: `PY Tshirt ${id}`,
+    title: `PY Tshirt `,
     description: "Classic t-shirt for daily use.",
     price: 100,
     imgSrc:

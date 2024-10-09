@@ -16,28 +16,11 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <NavLink   to="/">
-        <div className="text-white text-2xl">MyApp</div>
+        <NavLink to="/">
+          <div className="text-white text-2xl">MyApp</div>
         </NavLink>
-       
-        <div className="flex space-x-4 items-center">
-          {/* Cart Icon with item count */}
-          <div className="relative">
-            <button
-              onClick={togglePopup} // Toggle popup on click
-              className="text-white relative focus:outline-none"
-            >
-              <ShoppingCart size={24} />
-              {totalItems > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                  {totalItems}
-                </span>
-              )}
-            </button>
-            {/* Show CartPopup when the button is clicked */}
-            {isPopupOpen && <CartPopup onClose={() => setPopupOpen(false)} />}
-          </div>
 
+        <div className="flex space-x-4 items-center">
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -78,6 +61,22 @@ const Navbar = () => {
           >
             Contact
           </NavLink>
+          {/* Cart Icon with item count */}
+          <div className="relative">
+            <button
+              onClick={togglePopup} // Toggle popup on click
+              className="text-white relative focus:outline-none"
+            >
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+            {/* Show CartPopup when the button is clicked */}
+            {isPopupOpen && <CartPopup onClose={() => setPopupOpen(false)} />}
+          </div>
         </div>
       </div>
     </nav>

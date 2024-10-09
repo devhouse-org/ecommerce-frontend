@@ -69,8 +69,8 @@ export const useCartStore = create<CartState>((set) => ({
 
   // Clear the cart
   clearCart: () => {
-    localStorage.removeItem("cart"); // Remove from localStorage
-    return { cart: [] };
+    localStorage.removeItem("cart"); // Clear localStorage
+    set({ cart: [] }); // This updates the store state immediately
   },
 
   // Get total price of items in cart
