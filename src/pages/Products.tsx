@@ -53,22 +53,13 @@ const fetchProducts = async (categoryId: string) => {
 };
 
 const Products = () => {
-  // State to manage popup visibility
-
-  // Calculate the total number of items in the cart
-
-  const { data: categories = [], isLoading: categoriesLoading } = useQuery<
-    Category[]
-  >({
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
 
-  const { addToCart, cart, removeFromCart, updateQuantity } = useCartStore(); // Access addToCart from Zustand store
-  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<
-    string | undefined
-  >(undefined); // Default to undefined
+  const { addToCart, cart, removeFromCart, updateQuantity } = useCartStore(); // Access Zustand store
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined); // Default to undefined
 
   const { data: categoryWithProducts, isLoading: productsLoading } =
     useQuery<ProductListProps>({
@@ -79,7 +70,7 @@ const Products = () => {
 
   useEffect(() => {
     if (categories.length > 0) {
-      setSelectedCategoryId(categories[0]?.id); // Set default category when component mounts and there are categories available
+      setSelectedCategoryId(categories[0]?.id); // Set default category when component mounts
     }
   }, [categories]);
 
@@ -101,14 +92,17 @@ const Products = () => {
     );
   }
 
+  // Function to get the quantity of a specific product in the cart
+  const getQuantityInCart = (productId: string) => {
+    const cartItem = cart.find(item => item.id === productId);
+    return cartItem ? cartItem.quantity : 0;
+  };
+
   return (
     <>
-      <div className="font-bold text-5xl text-center mt-28">
-        Man Clothing Collection
-      </div>
+      <div className="font-bold text-5xl text-center mt-28">Man Clothing Collection</div>
       <div className="text-center mt-4 text-sm text-gray-500 mx-4">
-        Find everything you need to look and feel your best, and shop the latest
-        men's fashion and lifestyle products.
+        Find everything you need to look and feel your best, and shop the latest men's fashion and lifestyle products.
       </div>
 
       {/* Category selection */}
@@ -118,107 +112,78 @@ const Products = () => {
             key={category.id}
             onClick={() => setSelectedCategoryId(category.id)}
             className={`text-sm rounded-full px-5 py-2 border-2 ${
-              selectedCategoryId === category.id
-                ? "text-white bg-black border-white"
-                : "text-black border-black"
+              selectedCategoryId === category.id ? "text-white bg-black border-white" : "text-black border-black"
             }`}
           >
             {category.name}
           </button>
         ))}
-        <Link
-          to="/settings"
-          className="border-2 rounded-full px-2 border-black"
-        >
+        <Link to="/settings" className="border-2 rounded-full px-2 border-black">
           <Settings2 className="mt-1" />
         </Link>
       </div>
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10">
-        {categoryWithProducts?.products.map((product) => (
-          <Card key={product.id} className="border-2 shadow-none">
-            <Link to={`/product/${product.id}`}>
-              <CardHeader>
-                <img
-                  className="rounded-t-lg"
-                  src={
-                    "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
-                  }
-                  alt={product.title}
-                />
-                {/* <img
-                  className="rounded-t-lg"
-                  src={product.imageUrl}
-                  alt={product.title}
-                /> */}
-              </CardHeader>
-            </Link>
-            <Link to={`/product/${product.id}`}>
-              <CardContent>
-                <CardTitle className="font-bold mb-2 text-lg">
-                  {product.title}
-                </CardTitle>
-                <CardDescription>{product.description}</CardDescription>
-                <p className="font-bold text-lg">${product.price.toFixed(2)}</p>
-              </CardContent>
-            </Link>
-            <CardFooter className="">
-              {totalItems == 0 ? (
-                <Button
-                  className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
-                  onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
-                >
-                  <ShoppingCart size={20} />
+        {categoryWithProducts?.products.map((product) => {
+          const quantityInCart = getQuantityInCart(product.id); // Get quantity for this product
+          return (
+            <Card key={product.id} className="border-2 shadow-none">
+              <Link to={`/product/${product.id}`}>
+                <CardHeader>
+                  <img
+                    className="rounded-t-lg"
+                    src={
+                      "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
+                    }
+                    alt={product.title}
+                  />
+                </CardHeader>
+              </Link>
+              <Link to={`/product/${product.id}`}>
+                <CardContent>
+                  <CardTitle className="font-bold mb-2 text-lg">{product.title}</CardTitle>
+                  <CardDescription>{product.description}</CardDescription>
+                  <p className="font-bold text-lg">${product.price.toFixed(2)}</p>
+                </CardContent>
+              </Link>
+              <CardFooter>
+                {quantityInCart === 0 ? (
+                  <Button
+                    className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
+                    onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
+                  >
+                    <ShoppingCart size={20} />
+                  </Button>
+                ) : (
+                  <div className="flex items-center mr-2 bg-gray-200">
+                    <button
+                      className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
+                      onClick={() => {
+                        quantityInCart === 1 ? removeFromCart(product.id) : updateQuantity(product.id, quantityInCart - 1);
+                      }}
+                    >
+                      -
+                    </button>
+                    <span className="mx-1">{quantityInCart}</span>
+                    <button
+                      className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
+                      onClick={() => updateQuantity(product.id, quantityInCart + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
+
+                <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
+                  <Heart size={20} />
                 </Button>
-              ) : (
-                //   <div className="bg-gray-200">
-                //   <button
-
-                //     className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
-                //   >
-                //     -
-                //   </button>
-                //   <span className="font-bold text-md">{totalItems}</span>
-                //   <button
-
-                //     className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
-                //   >
-                //     +
-                //   </button>
-                // </div>
-
-                <div className="flex items-center mr-2 bg-gray-200">
-                  <button
-                    className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
-                    onClick={() => {
-                      {
-                        totalItems == 1
-                          ? removeFromCart(product.id)
-                          : updateQuantity(product.id, totalItems - 1);
-                      }
-                    }}
-                  >
-                    -
-                  </button>
-                  <span className="mx-1">{totalItems}</span>
-                  <button
-                    className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
-                    onClick={() => updateQuantity(product.id, totalItems + 1)}
-                  >
-                    +
-                  </button>
-                </div>
-              )}
-
-              <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
-                <Heart size={20} />
-              </Button>
-              <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
-                <TableColumnsSplit size={20} />
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+                <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
+                  <TableColumnsSplit size={20} />
+                </Button>
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
     </>
   );
