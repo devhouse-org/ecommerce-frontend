@@ -112,113 +112,100 @@ const Products = () => {
       </div>
 
       {/* Category selection */}
-      <div className="flex justify-start xl:justify-center gap-x-2 mt-10 overflow-x-auto whitespace-nowrap px-4 mx-8 pb-2 scrollbar-custom">
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => setSelectedCategoryId(category.id)}
-            className={`text-sm rounded-full px-5 py-2 border-2 ${
-              selectedCategoryId === category.id
-                ? "text-white bg-black border-white"
-                : "text-black border-black"
-            }`}
+      <div className="container mx-auto px-4 mt-10">
+        <div className="flex flex-wrap gap-y-4 2xl:gap-y-0 justify-start xl:justify-center gap-x-3 overflow-x-auto whitespace-nowrap pb-4 scrollbar-custom ">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setSelectedCategoryId(category.id)}
+              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out ${
+                selectedCategoryId === category.id
+                  ? "text-white bg-green-600 shadow-md hover:bg-green-700"
+                  : "text-gray-700 bg-gray-100 hover:bg-gray-200"
+              }`}
+            >
+              {category.name}
+            </button>
+          ))}
+          <Link
+            to="/settings"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-300"
           >
-            {category.name}
-          </button>
-        ))}
-        <Link
-          to="/settings"
-          className="border-2 rounded-full px-2 border-black"
-        >
-          <Settings2 className="mt-1" />
-        </Link>
+            <Settings2 size={20} className="text-gray-600" />
+          </Link>
+        </div>
       </div>
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10">
-        {categoryWithProducts?.products.map((product) => (
-          <Card key={product.id} className="border-2 shadow-none">
-            <Link to={`/product/${product.id}`}>
-              <CardHeader>
+      {/* cards section */}
+      <div className="container mx-auto mt-10 px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {categoryWithProducts?.products.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+            >
+              <Link
+                to={`/product/${product.id}`}
+                className="block overflow-hidden"
+              >
                 <img
-                  className="rounded-t-lg"
-                  src={
-                    "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
-                  }
+                  className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
+                  src="https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
                   alt={product.title}
                 />
-                {/* <img
-                  className="rounded-t-lg"
-                  src={product.imageUrl}
-                  alt={product.title}
-                /> */}
-              </CardHeader>
-            </Link>
-            <Link to={`/product/${product.id}`}>
-              <CardContent>
-                <CardTitle className="font-bold mb-2 text-lg">
-                  {product.title}
-                </CardTitle>
-                <CardDescription>{product.description}</CardDescription>
-                <p className="font-bold text-lg">${product.price.toFixed(2)}</p>
-              </CardContent>
-            </Link>
-            <CardFooter className="">
-              {totalItems == 0 ? (
-                <Button
-                  className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
-                  onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
-                >
-                  <ShoppingCart size={20} />
-                </Button>
-              ) : (
-                //   <div className="bg-gray-200">
-                //   <button
-
-                //     className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
-                //   >
-                //     -
-                //   </button>
-                //   <span className="font-bold text-md">{totalItems}</span>
-                //   <button
-
-                //     className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
-                //   >
-                //     +
-                //   </button>
-                // </div>
-
-                <div className="flex items-center mr-2 bg-gray-200">
+              </Link>
+              <div className="p-4">
+                <Link to={`/product/${product.id}`}>
+                  <h3 className="font-semibold text-lg mb-2 hover:text-green-600 transition-colors">
+                    {product.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                    {product.description}
+                  </p>
+                  <p className="font-bold text-lg text-green-600">
+                    ${product.price.toFixed(2)}
+                  </p>
+                </Link>
+              </div>
+              <div className="px-4 py-3 bg-gray-50 flex items-center justify-between">
+                {totalItems == 0 ? (
                   <button
-                    className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
-                    onClick={() => {
-                      {
+                    className="flex items-center justify-center bg-green-600 hover:bg-green-600 text-white rounded-full px-4 py-1.5 transition-colors duration-300"
+                    onClick={() => addToCart(product, 1)}
+                  >
+                    <ShoppingCart size={18} className="mr-2" />
+                    Add to Cart
+                  </button>
+                ) : (
+                  <div className="flex items-center bg-gray-200 rounded-full">
+                    <button
+                      className="px-3 py-1 text-gray-600 hover:text-green-600 transition-colors"
+                      onClick={() => {
                         totalItems == 1
                           ? removeFromCart(product.id)
                           : updateQuantity(product.id, totalItems - 1);
-                      }
-                    }}
-                  >
-                    -
-                  </button>
-                  <span className="mx-1">{totalItems}</span>
-                  <button
-                    className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
-                    onClick={() => updateQuantity(product.id, totalItems + 1)}
-                  >
-                    +
+                      }}
+                    >
+                      -
+                    </button>
+                    <span className="px-3 font-semibold">{totalItems}</span>
+                    <button
+                      className="px-3 py-1 text-gray-600 hover:text-green-600 transition-colors"
+                      onClick={() => updateQuantity(product.id, totalItems + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
+                <div className="flex space-x-2">
+                  <button className="text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-200">
+                    <Heart size={20} />
                   </button>
                 </div>
-              )}
-
-              <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
-                <Heart size={20} />
-              </Button>
-              <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
-                <TableColumnsSplit size={20} />
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
