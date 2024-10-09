@@ -53,7 +53,6 @@ const fetchProducts = async (categoryId: string) => {
 };
 
 const Products = () => {
- 
   // State to manage popup visibility
 
   // Calculate the total number of items in the cart
@@ -65,7 +64,7 @@ const Products = () => {
     queryFn: fetchCategories,
   });
 
-  const { addToCart, cart ,removeFromCart,updateQuantity} = useCartStore(); // Access addToCart from Zustand store
+  const { addToCart, cart, removeFromCart, updateQuantity } = useCartStore(); // Access addToCart from Zustand store
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     string | undefined
@@ -87,7 +86,7 @@ const Products = () => {
   // Show loading state for categories
   if (categoriesLoading) {
     return (
-      <div className="flex justify-center items-center h-full self-center mx-auto mt-4">
+      <div className="flex justify-center items-center h-screen self-center mx-auto mt-4">
         <Spinner />
       </div>
     );
@@ -96,7 +95,7 @@ const Products = () => {
   // Show loading state for products
   if (productsLoading) {
     return (
-      <div className="flex justify-center items-center h-full self-center mx-auto mt-4">
+      <div className="flex justify-center h-screen items-center self-center mx-auto mt-4">
         <Spinner />
       </div>
     );
@@ -113,7 +112,7 @@ const Products = () => {
       </div>
 
       {/* Category selection */}
-      <div className="flex justify-start xl:justify-center gap-x-2 mt-10 overflow-x-auto whitespace-nowrap px-4">
+      <div className="flex justify-start xl:justify-center gap-x-2 mt-10 overflow-x-auto whitespace-nowrap px-4 mx-8 pb-2 scrollbar-custom">
         {categories.map((category) => (
           <button
             key={category.id}
@@ -137,7 +136,7 @@ const Products = () => {
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10">
         {categoryWithProducts?.products.map((product) => (
-          <Card key={product.id} className="border-none shadow-none">
+          <Card key={product.id} className="border-2 shadow-none">
             <Link to={`/product/${product.id}`}>
               <CardHeader>
                 {/* <img
@@ -164,54 +163,53 @@ const Products = () => {
               </CardContent>
             </Link>
             <CardFooter className="">
-              {totalItems==0 ?      <Button
-                className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
-                onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
-              >
-                <ShoppingCart size={20} />
-              </Button>:
-              
-            //   <div className="bg-gray-200">
-            //   <button
-              
-             
-            //     className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
-            //   >
-            //     -
-            //   </button>
-            //   <span className="font-bold text-md">{totalItems}</span>
-            //   <button
-                
-            //     className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
-            //   >
-            //     +
-            //   </button>
-            // </div>
-              
-            <div className="flex items-center mr-2 bg-gray-200">
-            <button
-              className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
-              onClick={() => {
-                {
-                  totalItems == 1
-                    ? removeFromCart(product.id)
-                    : updateQuantity(product.id, totalItems - 1);
-                }
-              }}
-            >
-              -
-            </button>
-            <span className="mx-1">{totalItems}</span>
-            <button
-              className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
-              onClick={() => updateQuantity(product.id, totalItems + 1)}
-            >
-              +
-            </button>
-          </div>
-              
-              }
-         
+              {totalItems == 0 ? (
+                <Button
+                  className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
+                  onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
+                >
+                  <ShoppingCart size={20} />
+                </Button>
+              ) : (
+                //   <div className="bg-gray-200">
+                //   <button
+
+                //     className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
+                //   >
+                //     -
+                //   </button>
+                //   <span className="font-bold text-md">{totalItems}</span>
+                //   <button
+
+                //     className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
+                //   >
+                //     +
+                //   </button>
+                // </div>
+
+                <div className="flex items-center mr-2 bg-gray-200">
+                  <button
+                    className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
+                    onClick={() => {
+                      {
+                        totalItems == 1
+                          ? removeFromCart(product.id)
+                          : updateQuantity(product.id, totalItems - 1);
+                      }
+                    }}
+                  >
+                    -
+                  </button>
+                  <span className="mx-1">{totalItems}</span>
+                  <button
+                    className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
+                    onClick={() => updateQuantity(product.id, totalItems + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+
               <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
                 <Heart size={20} />
               </Button>
