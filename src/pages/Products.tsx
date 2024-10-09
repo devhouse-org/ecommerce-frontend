@@ -31,7 +31,7 @@ type ProductT = {
   title: string;
   description: string;
   price: number;
-  imageUrl: string;
+  imgSrc: string;
 };
 
 type ProductListProps = {
@@ -60,7 +60,7 @@ const Products = () => {
     queryFn: fetchCategories,
   });
 
-  const { addToCart } = useCartStore(); // Access addToCart from Zustand store
+  const { addToCart, cart } = useCartStore(); // Access addToCart from Zustand store
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     string | undefined
@@ -96,6 +96,7 @@ const Products = () => {
       </div>
     );
   }
+  console.log(cart);
 
   return (
     <>
@@ -132,33 +133,32 @@ const Products = () => {
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container mx-auto mt-10 gap-10">
         {categoryWithProducts?.products.map((product) => (
-          <Link to={`/product/${product.id}`}>
-          
-          
-          
-        
           <Card key={product.id} className="border-none shadow-none">
-            <CardHeader>
-              {/* <img
+            <Link to={`/product/${product.id}`}>
+              <CardHeader>
+                {/* <img
                 className="rounded-t-lg"
                 src={
                   "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
                 }
                 alt={product.title}
               /> */}
-              <img
-                className="rounded-t-lg"
-                src={product.imageUrl}
-                alt={product.title}
-              />
-            </CardHeader>
-            <CardContent>
-              <CardTitle className="font-bold mb-2 text-lg">
-                {product.title}
-              </CardTitle>
-              <CardDescription>{product.description}</CardDescription>
-              <p className="font-bold text-lg">${product.price.toFixed(2)}</p>
-            </CardContent>
+                <img
+                  className="rounded-t-lg"
+                  src={product.imageUrl}
+                  alt={product.title}
+                />
+              </CardHeader>
+            </Link>
+            <Link to={`/product/${product.id}`}>
+              <CardContent>
+                <CardTitle className="font-bold mb-2 text-lg">
+                  {product.title}
+                </CardTitle>
+                <CardDescription>{product.description}</CardDescription>
+                <p className="font-bold text-lg">${product.price.toFixed(2)}</p>
+              </CardContent>
+            </Link>
             <CardFooter className="">
               <Button
                 className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
@@ -174,7 +174,6 @@ const Products = () => {
               </Button>
             </CardFooter>
           </Card>
-          </Link>
         ))}
       </div>
     </>

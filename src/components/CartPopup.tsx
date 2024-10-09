@@ -46,6 +46,7 @@ const CartPopup: React.FC<CartPopupProps> = ({ onClose }) => {
                 alt={item.title}
                 className="w-16 h-16 object-cover rounded mr-2"
               />
+              <p>{item.name}</p>
               <div className="flex justify-between w-full">
                 <div>
                   <h4 className="font-semibold">{item.title}</h4>
