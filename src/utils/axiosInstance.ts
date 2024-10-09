@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://192.168.31.161:3000",
+  baseURL: "http://localhost:3000",
 });
 
 // Intercept requests to add the token to headers
