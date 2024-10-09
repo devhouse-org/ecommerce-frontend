@@ -16,6 +16,7 @@ interface CartState {
   addToCart: (product: Omit<CartItem, "quantity">, quantity: number) => void; // Use Omit to exclude quantity from product
   removeFromCart: (productId: number) => void; // or string
   clearCart: () => void;
+  updateQuantity: (productId: number, quantity: number) => void; // New function to update quantity
   getTotalPrice: () => number; // Add a method to get total price
 }
 
@@ -49,6 +50,19 @@ export const useCartStore = create<CartState>((set) => ({
   removeFromCart: (productId) =>
     set((state) => {
       const updatedCart = state.cart.filter((item) => item.id !== productId);
+      localStorage.setItem("cart", JSON.stringify(updatedCart)); // Persist updated cart
+      return { cart: updatedCart };
+    }),
+
+  // Update product quantity in cart
+  updateQuantity: (productId, quantity) =>
+    set((state) => {
+      const updatedCart = state.cart.map((item) => {
+        if (item.id === productId) {
+          return { ...item, quantity: quantity >= 0 ? quantity : 0 }; // Prevent negative quantity
+        }
+        return item;
+      });
       localStorage.setItem("cart", JSON.stringify(updatedCart)); // Persist updated cart
       return { cart: updatedCart };
     }),

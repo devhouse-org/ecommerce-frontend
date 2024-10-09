@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "../utils/CartContext"; // Adjust the path as necessary
+import Spinner from "@/components/Spinner";
 
 type Category = {
   id: string;
@@ -80,12 +81,20 @@ const Products = () => {
 
   // Show loading state for categories
   if (categoriesLoading) {
-    return <div>Loading categories...</div>;
+    return (
+      <div className="flex justify-center items-center h-full self-center mx-auto mt-4">
+        <Spinner />
+      </div>
+    );
   }
 
   // Show loading state for products
   if (productsLoading) {
-    return <div>Loading products...</div>;
+    return (
+      <div className="flex justify-center items-center h-full self-center mx-auto mt-4">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
@@ -125,19 +134,18 @@ const Products = () => {
         {categoryWithProducts?.products.map((product) => (
           <Card key={product.id} className="border-none shadow-none">
             <CardHeader>
-              <img
+              {/* <img
                 className="rounded-t-lg"
                 src={
                   "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
                 }
                 alt={product.title}
-              />
-              {/* <img
+              /> */}
+              <img
                 className="rounded-t-lg"
-
                 src={product.imageUrl}
                 alt={product.title}
-              /> */}
+              />
             </CardHeader>
             <CardContent>
               <CardTitle className="font-bold mb-2 text-lg">
