@@ -53,6 +53,11 @@ const fetchProducts = async (categoryId: string) => {
 };
 
 const Products = () => {
+ 
+  // State to manage popup visibility
+
+  // Calculate the total number of items in the cart
+
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<
     Category[]
   >({
@@ -60,8 +65,8 @@ const Products = () => {
     queryFn: fetchCategories,
   });
 
-  const { addToCart, cart } = useCartStore(); // Access addToCart from Zustand store
-
+  const { addToCart, cart ,removeFromCart,updateQuantity} = useCartStore(); // Access addToCart from Zustand store
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     string | undefined
   >(undefined); // Default to undefined
@@ -159,12 +164,54 @@ const Products = () => {
               </CardContent>
             </Link>
             <CardFooter className="">
-              <Button
+              {totalItems==0 ?      <Button
                 className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
                 onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
               >
                 <ShoppingCart size={20} />
-              </Button>
+              </Button>:
+              
+            //   <div className="bg-gray-200">
+            //   <button
+              
+             
+            //     className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
+            //   >
+            //     -
+            //   </button>
+            //   <span className="font-bold text-md">{totalItems}</span>
+            //   <button
+                
+            //     className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
+            //   >
+            //     +
+            //   </button>
+            // </div>
+              
+            <div className="flex items-center mr-2 bg-gray-200">
+            <button
+              className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
+              onClick={() => {
+                {
+                  totalItems == 1
+                    ? removeFromCart(product.id)
+                    : updateQuantity(product.id, totalItems - 1);
+                }
+              }}
+            >
+              -
+            </button>
+            <span className="mx-1">{totalItems}</span>
+            <button
+              className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-2 py-1"
+              onClick={() => updateQuantity(product.id, totalItems + 1)}
+            >
+              +
+            </button>
+          </div>
+              
+              }
+         
               <Button className="text-gray-700 size-10 p-1 rounded-full hover:bg-gray-100 cursor-pointer">
                 <Heart size={20} />
               </Button>
