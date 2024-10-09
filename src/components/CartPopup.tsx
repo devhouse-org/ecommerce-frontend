@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useCartStore } from "../utils/CartContext"; // Adjust the path as necessary
+import { useCartStore } from "../store/index";
 import { X } from "lucide-react"; // Import ShoppingCart from Lucide
 import { Link } from "react-router-dom";
 

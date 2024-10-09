@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useCartStore } from "../utils/CartContext"; // Import Zustand store
+import { useCartStore } from "../store/index"; // Import Zustand store
 import { ShoppingCart } from "lucide-react"; // Import ShoppingCart from Lucide
 import CartPopup from "../components/CartPopup"; // Import the CartPopup component
 

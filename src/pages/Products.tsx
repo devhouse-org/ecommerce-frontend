@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useCartStore } from "../utils/CartContext"; // Adjust the path as necessary
+import { useCartStore } from "../store/index";
 import Spinner from "@/components/Spinner";
 
 type Category = {

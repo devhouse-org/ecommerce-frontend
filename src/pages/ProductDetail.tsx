@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useCartStore } from "../utils/CartContext"; // Import Zustand store
-
+import { useCartStore } from "../store/index";
 // Mock product list for recommendations
 const recommendedProducts = Array.from({ length: 4 }, (_, index) => ({
   id: index + 1,
