@@ -96,7 +96,6 @@ const Products = () => {
       </div>
     );
   }
-  console.log(cart);
 
   return (
     <>
