@@ -20,7 +20,7 @@ const ProductDetail = () => {
   // Mock product data
   const product = {
     id,
-    title: `PY Tshirt ${id}`,
+    title: id,
     description: "Classic t-shirt for daily use.",
     price: 100,
     imgSrc:
@@ -65,25 +65,25 @@ const ProductDetail = () => {
             ${product.price.toLocaleString()}
           </p>
 
-          <div className="flex items-center mb-4 gap-8">
-            <div className="bg-gray-200">
+          <div className="flex items-center  mb-4 gap-8">
+            <div className=" bg-gray-200 ">
               <button
                 onClick={handleDecrease}
-                className="mr-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
+                className="mr-2  hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
               >
                 -
               </button>
-              <span className="font-bold text-md">{quantity}</span>
+              <span className="font-bold text-md ">{quantity}</span>
               <button
                 onClick={handleIncrease}
-                className="ml-2 bg-gray-200 hover:bg-gray-300 hover:text-green-600 text-xl px-5 py-2"
+                className="ml-2  hover:bg-gray-300  hover:text-green-600 text-xl px-5 py-2"
               >
                 +
               </button>
             </div>
             <Button
               variant="default"
-              className="bg-green-800 w-fit rounded-sm"
+              className="bg-green-800 text-white w-fit  border-none"
               onClick={handleAddToCart} // Add to cart action
             >
               ADD TO CART
@@ -99,25 +99,26 @@ const ProductDetail = () => {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {recommendedProducts.map((product) => (
-            <Card key={product.id} className="bg-white rounded-lg">
-              <Link to={`/product/${product.id}`}>
+            <Card key={product.id} className="bg-white rounded-lg shadow-xl">
+               <Link to={`/product/${product.id}`}>
                 <img
-                  className="rounded-lg w-full"
+                  className="rounded-lg w-full mb-3"
                   src={product.imgSrc}
                   alt={product.title}
                 />
-              </Link>
+             
+              
+             
               <CardContent>
-                <Link to={`/product/${product.id}`}>
-                  <p className="mb-2 font-bold tracking-tight text-gray-900">
+              <p className="my-2 font-bold tracking-tight text-gray-900">
                     {product.title}
                   </p>
-                </Link>
-                <p className="mb-3 font-normal text-gray-700">
+                <p className="mb-2 font-normal text-gray-700">
                   {product.description}
                 </p>
                 <p className="font-bold text-lg">${product.price}</p>
               </CardContent>
+              </Link>
             </Card>
           ))}
         </div>

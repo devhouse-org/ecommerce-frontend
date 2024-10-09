@@ -16,7 +16,10 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
+        <NavLink   to="/">
         <div className="text-white text-2xl">MyApp</div>
+        </NavLink>
+       
         <div className="flex space-x-4 items-center">
           {/* Cart Icon with item count */}
           <div className="relative">
