@@ -1,8 +1,4 @@
-import {
-  Heart,
-  Settings2,
-  ShoppingCart,
-} from "lucide-react";
+import { Heart, Search, Settings2, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
@@ -10,8 +6,6 @@ import axiosInstance from "../utils/axiosInstance";
 import { useCartStore } from "../store/index";
 import Spinner from "@/components/Spinner";
 import { Category, ProductListProps } from "@/utils/types";
-
-
 
 const fetchCategories = async () => {
   const response = await axiosInstance.get("/category");
@@ -30,7 +24,7 @@ const Products = () => {
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
-
+  const [searchTerm, setSearchTerm] = useState("");
   const { addToCart, cart, removeFromCart, updateQuantity } = useCartStore(); // Access Zustand store
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     string | undefined
@@ -74,6 +68,13 @@ const Products = () => {
   };
   console.log(cart);
 
+  // Filter products based on search term
+  const filteredProducts = categoryWithProducts?.products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <div className="font-bold text-5xl text-center pt-28">
@@ -84,6 +85,23 @@ const Products = () => {
         men's fashion and lifestyle products.
       </div>
 
+      {/* Search Bar */}
+      <div className="container mx-auto px-4 mt-8">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-green-600"
+          />
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
+        </div>
+      </div>
+
       {/* Category selection */}
       <div className="container mx-auto px-4 mt-10">
         <div className="flex flex-wrap gap-y-4 2xl:gap-y-0 justify-start xl:justify-center gap-x-3 overflow-x-auto whitespace-nowrap pb-4 scrollbar-custom ">
@@ -91,10 +109,11 @@ const Products = () => {
             <button
               key={category.id}
               onClick={() => setSelectedCategoryId(category.id)}
-              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out ${selectedCategoryId === category.id
+              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out ${
+                selectedCategoryId === category.id
                   ? "text-white bg-green-600 shadow-md hover:bg-green-700"
                   : "text-gray-700 bg-gray-100 hover:bg-gray-200"
-                }`}
+              }`}
             >
               {category.name}
             </button>
@@ -111,7 +130,7 @@ const Products = () => {
       {/* Card Section */}
       <div className="container mx-auto mt-10 px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {categoryWithProducts?.products.map((product) => {
+          {filteredProducts?.map((product) => {
             const quantityInCart = getQuantityInCart(product.id); // Get quantity for this product
             return (
               <div
