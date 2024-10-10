@@ -7,23 +7,10 @@ import axiosInstance from "@/utils/axiosInstance";
 import Spinner from "@/components/Spinner";
 import { useQuery } from "@tanstack/react-query";
 import { ShoppingCart } from "lucide-react";
+import { ProductT } from "@/utils/types";
 
-// Mock product list for recommendations
-const recommendedProducts = Array.from({ length: 4 }, (_, index) => ({
-  id: index + 1,
-  title: `PY Tshirt ${index + 1}`,
-  description: "Classic t-shirt for daily use.",
-  price: 99,
-  imgSrc: "https://cdn.pixabay.com/photo/2024/04/29/04/21/neon-8726714_640.jpg",
-}));
 
-type ProductT = {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-};
+
 
 const ProductDetail = () => {
   const fetchProductById = async (productId: string) => {

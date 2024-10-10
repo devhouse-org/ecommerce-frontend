@@ -1,37 +1,17 @@
 import {
-  CarTaxiFront,
   Heart,
   Settings2,
   ShoppingCart,
-  TableColumnsSplit,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 import axiosInstance from "../utils/axiosInstance";
 import { useCartStore } from "../store/index";
 import Spinner from "@/components/Spinner";
+import { Category, ProductListProps } from "@/utils/types";
 
-type Category = {
-  id: string;
-  name: string;
-};
 
-type ProductT = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-};
-
-type ProductListProps = {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  name: string;
-  products: ProductT[];
-};
 
 const fetchCategories = async () => {
   const response = await axiosInstance.get("/category");
@@ -111,11 +91,10 @@ const Products = () => {
             <button
               key={category.id}
               onClick={() => setSelectedCategoryId(category.id)}
-              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out ${
-                selectedCategoryId === category.id
+              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out ${selectedCategoryId === category.id
                   ? "text-white bg-green-600 shadow-md hover:bg-green-700"
                   : "text-gray-700 bg-gray-100 hover:bg-gray-200"
-              }`}
+                }`}
             >
               {category.name}
             </button>
