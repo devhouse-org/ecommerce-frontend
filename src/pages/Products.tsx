@@ -9,15 +9,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 import axiosInstance from "../utils/axiosInstance";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useCartStore } from "../store/index";
 import Spinner from "@/components/Spinner";
 
@@ -28,7 +19,7 @@ type Category = {
 
 type ProductT = {
   id: string;
-  title: string;
+  name: string;
   description: string;
   price: number;
   imageUrl: string;
@@ -157,13 +148,13 @@ const Products = () => {
                     src={
                       "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
                     }
-                    alt={product.title}
+                    alt={product.name}
                   />
                 </Link>
                 <div className="p-4">
                   <Link to={`/product/${product.id}`}>
                     <h3 className="font-semibold text-lg mb-2 hover:text-green-600 transition-colors">
-                      {product.title}
+                      {product.name}
                     </h3>
                     <p className="text-gray-600 text-sm mb-2 line-clamp-2">
                       {product.description}

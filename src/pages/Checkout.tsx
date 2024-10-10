@@ -36,7 +36,7 @@ const Checkout = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row mt-40 justify-between max-w-5xl mx-auto p-8 bg-white h-auto">
+    <div className="flex flex-col md:flex-row  justify-between max-w-5xl mx-auto p-8 bg-white h-auto">
       <div className="flex-1 mb-8 md:mb-0">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Checkout</h1>
         <form onSubmit={handleSubmit}>
