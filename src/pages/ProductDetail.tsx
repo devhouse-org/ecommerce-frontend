@@ -7,7 +7,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import Spinner from "@/components/Spinner";
 import { useQuery } from "@tanstack/react-query";
 import { ShoppingCart } from "lucide-react";
-import { ProductT } from "@/utils/types";
+import { CartItem, ProductT } from "@/utils/types";
 
 
 
@@ -21,7 +21,7 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>(); // Get the product ID from the URL
   const { addToCart, cart, updateQuantity, removeFromCart } = useCartStore(); // Zustand store for cart actions
 
-  const { data: product, isLoading } = useQuery<ProductT>({
+  const { data: product, isLoading } = useQuery<CartItem>({
     queryKey: ["product", id],
     queryFn: () => fetchProductById(id!),
   });
@@ -60,12 +60,12 @@ const ProductDetail = () => {
             src={
               "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
             }
-            alt={product.title}
+            alt={product.name}
           />
         </Card>
 
         <div className="mt-5 md:mt-0 md:ml-5 w-full md:w-1/2">
-          <p className="font-bold text-2xl mb-2">{product.title}</p>
+          <p className="font-bold text-2xl mb-2">{product.name}</p>
           <p className="text-sm text-green-600 mb-4">NEW PRODUCT</p>
           <p className="mb-4 font-normal text-gray-700">
             {product.description}

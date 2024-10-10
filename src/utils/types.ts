@@ -1,7 +1,7 @@
 // Define the type for a product in the cart
 export interface CartItem {
     id: string; // or string, depending on your product ID type
-    title: string;
+    name: string;
     description: string;
     price: number;
     imageUrl: string;
@@ -11,7 +11,7 @@ export interface CartItem {
 // Define the shape of the store's state
 export interface CartState {
     cart: CartItem[];
-    addToCart: (product: Omit<CartItem, "quantity">, quantity: number) => void; // Use Omit to exclude quantity from product
+    addToCart: (product: CartItem, quantity: number) => void; // Use Omit to exclude quantity from product
     removeFromCart: (productId: string) => void; // or string
     clearCart: () => void;
     updateQuantity: (productId: string, quantity: number) => void; // New function to update quantity
@@ -35,6 +35,6 @@ export type Category = {
     createdAt: string;
     updatedAt: string;
     name: string;
-    products: ProductT[];
+    products: CartItem[];
   };
 

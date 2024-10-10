@@ -40,10 +40,10 @@ const CheckoutPage = () => {
                   item.imageUrl ||
                   "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
                 }
-                alt={item.title}
+                alt={item.name}
               />
               <div className="flex-grow">
-                <h3 className="font-bold text-lg mb-1">{item.title}</h3>
+                <h3 className="font-bold text-lg mb-1">{item.name}</h3>
                 <p className="text-sm text-gray-600 mb-2">
                   ${item.price.toFixed(2)}
                 </p>
