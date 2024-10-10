@@ -123,7 +123,7 @@ const ProductDetail = () => {
       </div>
 
       {/* Recommended Products Section */}
-      <div className="w-full mt-20">
+      {/* <div className="w-full mt-20">
         <p className="font-bold text-3xl text-center mb-10">
           You May Also Like
         </p>
@@ -151,7 +151,7 @@ const ProductDetail = () => {
             </Card>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
