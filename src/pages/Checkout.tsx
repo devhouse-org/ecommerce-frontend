@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Checkout = () => {
   const [billingDetails, setBillingDetails] = useState({
@@ -19,17 +19,17 @@ const Checkout = () => {
   const vat = 9.0;
   const grandTotal = (totalAmount + shippingCost + vat).toFixed(2);
 
-  const handleBillingChange = (e) => {
+  const handleBillingChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setBillingDetails({ ...billingDetails, [name]: value });
   };
 
-  const handleShippingChange = (e) => {
+  const handleShippingChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setShippingInfo({ ...shippingInfo, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Here you can handle form submission, e.g., send data to a server
     alert("Checkout Successful!");
