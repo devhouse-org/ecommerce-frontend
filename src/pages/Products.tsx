@@ -1,4 +1,11 @@
-import { Heart, Search, Settings2, ShoppingCart } from "lucide-react";
+import {
+  CircleX,
+  Heart,
+  Search,
+  Settings2,
+  ShoppingCart,
+  X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
@@ -93,12 +100,22 @@ const Products = () => {
             placeholder="Search products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-green-600"
+            className="w-full px-4 py-3 pl-10 pr-4 text-gray-700 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-green-600 shadow-lg"
           />
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
             size={20}
           />
+          <div className="flex items-center justify-end absolute right-10 top-1/4">
+            <CircleX
+              onClick={() => setSearchTerm("")}
+              size={24}
+              className="text-gray-400 hover:text-green-500 transition"
+            />
+          </div>
+          {/* <div className="flex items-center justify-end absolute rounded-full  bg-green-500 right-6 top-1/4 ">
+            <button className="">Search</button>
+          </div> */}
         </div>
       </div>
 
