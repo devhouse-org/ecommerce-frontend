@@ -81,7 +81,7 @@ const Products = () => {
   // Show loading state for categories
   if (categoriesLoading) {
     return (
-      <div className="flex justify-center items-center h-screen self-center mx-auto mt-4">
+      <div className="flex justify-center items-center h-screen self-center mx-auto">
         <Spinner />
       </div>
     );
@@ -90,7 +90,7 @@ const Products = () => {
   // Show loading state for products
   if (productsLoading) {
     return (
-      <div className="flex justify-center h-screen items-center self-center mx-auto mt-4">
+      <div className="flex justify-center h-screen items-center self-center mx-auto">
         <Spinner />
       </div>
     );

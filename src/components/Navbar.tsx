@@ -51,16 +51,6 @@ const Navbar = () => {
             Home
           </NavLink>
           <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold text-green-600 hover:text-green-500 transition ease-in-out"
-                : "text-gray-300 hover:text-white"
-            }
-          >
-            About
-          </NavLink>
-          <NavLink
             to="/products"
             className={({ isActive }) =>
               isActive
@@ -79,6 +69,16 @@ const Navbar = () => {
             }
           >
             Contact
+          </NavLink>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-green-600 hover:text-green-500 transition ease-in-out"
+                : "text-gray-300 hover:text-white"
+            }
+          >
+            About
           </NavLink>
           {/* Cart Icon with item count */}
           <div className="relative">

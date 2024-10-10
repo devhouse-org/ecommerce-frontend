@@ -37,18 +37,18 @@ const Home = ({}: Props) => {
               <h1 className="text-4xl mb-4 mt-1 font-bold text-brown-50 text-white">
                 Coton Fabric
               </h1>
-              <p className="text-gray-500 max-w-[75%] text-gray-50/75  self-center lg:self-auto">
+              <p className="max-w-[75%] text-white/75  self-center lg:self-auto">
                 Stay warm in our new, easy-care sweaters. Perfect for dressing
                 up or down, while staying comfortable all season long.
               </p>
-              <Link to={"/products"} className=" bg-white h-fit py-2 px-4 w-fit mt-4 self-center lg:self-start rounded-md cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out shadow-md hover:scale-100 hover:shadow-lg before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-[#009b49] before:to-[rgb(105,184,141)] before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-md hover:before:left-0 text-[#000] font-bold">
+              <Link to={"/products"} className="bg-white h-fit py-2 px-4 w-fit mt-4 self-center lg:self-start rounded-md cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-[#009b49] before:to-[rgb(105,184,141)] before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-md hover:before:left-0 text-[#000] font-bold">
               See Products
             </Link>
             </div>
             <div className="flex-1 flex justify-center lg:justify-end  items-center">
-              <div className="img-container h-[70%] w-full max-w-[500px] rounded-sm overflow-hidden">
+              <div className="img-container h-[70%] w-full max-w-[500px] rounded-md overflow-hidden">
                 <img
-                  className="w-full h-full hover:scale-[1.008] transition ease-in-out cursor-pointer object-cover"
+                  className="w-full h-full object-cover hover:scale-[1.11] duration-[.9s] transition ease-in-out"
                   src="https://cdn.shopify.com/s/files/1/1368/3463/files/Stachehaus_E2_84_A2_Cuts_Fall24_LA-321_450x_crop_center@2x.progressive.jpg?v=1726606783"
                   alt=""
                 />
@@ -86,7 +86,7 @@ const Home = ({}: Props) => {
         </div>
       </div>
 
-      <div className="container mx-auto">
+      <div className="container mx-auto px-8">
         {/* ZX7 Speaker */}
         <div className="h-[400px] mb-4 w-full rounded-md overflow-hidden">
           <img
