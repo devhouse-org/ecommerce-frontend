@@ -1,5 +1,3 @@
-import { useState } from "react";
-import React from "react";
 import { useCartStore } from "../store/index";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,22 +12,6 @@ const CheckoutPage = () => {
   // Call getTotalPrice to get the calculated total price
   const totalPrice = calculateTotalPrice(cart);
 
-
-  // const handleBillingChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setBillingDetails({ ...billingDetails, [name]: value });
-  // };
-
-  // const handleShippingChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setShippingInfo({ ...shippingInfo, [name]: value });
-  // };
-
-  // const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   // Here you can handle form submission, e.g., send data to a server
-  //   alert("Checkout Successful!");
-  // };
   if (cart.length === 0) {
     return (
       <div className="container mx-auto pt-28 px-4 md:px-0 flex flex-col items-center justify-center h-screen">
