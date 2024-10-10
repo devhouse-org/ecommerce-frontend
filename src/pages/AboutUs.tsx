@@ -1,6 +1,6 @@
 const AboutUs = () => {
   return (
-    <div className="bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 pt-28">
+    <div className=" min-h-screen py-12 px-4 sm:px-6 lg:px-8 pt-28">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           <div className="bg-white shadow-md rounded-2xl p-8 lg:w-1/2">
