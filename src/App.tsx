@@ -20,7 +20,7 @@ function App() {
         
 
       </Routes>
-      <MyFooter />
+      {/* <MyFooter /> */}
     </div>
   );
 }

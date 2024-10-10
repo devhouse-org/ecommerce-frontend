@@ -1,184 +1,122 @@
 import { useState } from "react";
+import React from "react";
+import { useCartStore } from "../store/index";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ShoppingBag, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { calculateTotalPrice } from "@/utils/help";
 
-const Checkout = () => {
-  const [billingDetails, setBillingDetails] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
+const CheckoutPage = () => {
+  const { cart, removeFromCart, updateQuantity } =
+    useCartStore();
 
-  const [shippingInfo, setShippingInfo] = useState({
-    address: "",
-    zipCode: "",
-    city: "",
-    country: "",
-  });
+  // Call getTotalPrice to get the calculated total price
+  const totalPrice = calculateTotalPrice(cart);
 
-  const totalAmount = 45.0; // Assuming the amount is in dollars
-  const shippingCost = 5.0;
-  const vat = 9.0;
-  const grandTotal = (totalAmount + shippingCost + vat).toFixed(2);
 
-  const handleBillingChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setBillingDetails({ ...billingDetails, [name]: value });
-  };
+  // const handleBillingChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setBillingDetails({ ...billingDetails, [name]: value });
+  // };
 
-  const handleShippingChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setShippingInfo({ ...shippingInfo, [name]: value });
-  };
+  // const handleShippingChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setShippingInfo({ ...shippingInfo, [name]: value });
+  // };
 
-  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Here you can handle form submission, e.g., send data to a server
-    alert("Checkout Successful!");
-  };
+  // const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   // Here you can handle form submission, e.g., send data to a server
+  //   alert("Checkout Successful!");
+  // };
+  if (cart.length === 0) {
+    return (
+      <div className="container mx-auto pt-28 px-4 md:px-0 flex flex-col items-center justify-center h-screen">
+        <ShoppingBag size={64} className="text-gray-400 mb-4" />
+        <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
+        <Link to="/" className="text-blue-600 hover:underline">
+          Continue Shopping
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col md:flex-row  justify-between max-w-5xl mx-auto p-8 bg-white h-auto">
-      <div className="flex-1 mb-8 md:mb-0">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Checkout</h1>
-        <form onSubmit={handleSubmit}>
-          <h2 className="text-xl font-semibold text-gray-700 mt-4">
-            Billing Details
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="block" htmlFor="name">
-              Name:
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={billingDetails.name}
-                onChange={handleBillingChange}
-                required
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </label>
-            <label className="block" htmlFor="email">
-              Email Address:
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={billingDetails.email}
-                onChange={handleBillingChange}
-                required
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </label>
-            <label className="block" htmlFor="phone">
-              Phone Number:
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={billingDetails.phone}
-                onChange={handleBillingChange}
-                required
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </label>
-          </div>
-
-          <h2 className="text-xl font-semibold text-gray-700 mt-4">
-            Shipping Info
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="block" htmlFor="address">
-              Your Address:
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={shippingInfo.address}
-                onChange={handleShippingChange}
-                required
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </label>
-            <label className="block" htmlFor="zipCode">
-              ZIP Code:
-              <input
-                type="text"
-                id="zipCode"
-                name="zipCode"
-                value={shippingInfo.zipCode}
-                onChange={handleShippingChange}
-                required
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </label>
-            <label className="block" htmlFor="city">
-              City:
-              <input
-                type="text"
-                id="city"
-                name="city"
-                value={shippingInfo.city}
-                onChange={handleShippingChange}
-                required
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </label>
-            <label className="block" htmlFor="country">
-              Country:
-              <input
-                type="text"
-                id="country"
-                name="country"
-                value={shippingInfo.country}
-                onChange={handleShippingChange}
-                required
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </label>
-          </div>
-
-          {/* Moved the submit button inside the form */}
-          <button
-            type="submit"
-            className="mt-6 w-full p-4 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition duration-200 ease-in-out"
+    <div className="container mx-auto pt-28 px-4 md:px-0 flex flex-col md:flex-row md:justify-between md:items-start">
+      <div className="w-full md:w-2/3 mb-8 md:mb-0 md:mr-8">
+        <h2 className="text-2xl font-bold mb-6">Your Cart</h2>
+        {cart.map((item) => (
+          <Card
+            key={item.id}
+            className="mb-4 bg-white rounded-lg overflow-hidden"
           >
-            Continue & Pay
-          </button>
-        </form>
+            <CardContent className="p-4 flex items-center">
+              <img
+                className="w-24 h-24 object-cover rounded-lg mr-4"
+                src={
+                  item.imageUrl ||
+                  "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
+                }
+                alt={item.title}
+              />
+              <div className="flex-grow">
+                <h3 className="font-bold text-lg mb-1">{item.title}</h3>
+                <p className="text-sm text-gray-600 mb-2">
+                  ${item.price.toFixed(2)}
+                </p>
+                <div className="flex items-center">
+                  <button
+                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-l-full"
+                  >
+                    -
+                  </button>
+                  <span className="px-4 py-1 bg-gray-200 text-gray-700">
+                    {item.quantity}
+                  </span>
+                  <button
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-r-full"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <button
+                onClick={() => removeFromCart(item.id)}
+                className="ml-4 text-red-500 hover:text-red-700"
+              >
+                <Trash2 size={20} />
+              </button>
+            </CardContent>
+          </Card>
+        ))}
       </div>
-
-      <div className="flex-1 pl-0 md:pl-8">
-        <h2 className="text-xl font-semibold text-gray-700 mt-4">Summary</h2>
-        <div className="mt-4 bg-white border border-gray-300 rounded-md shadow-md p-4">
-          {/* Updated image src and alt to match the product */}
-          <img
-            src="https://cdn.shopify.com/s/files/1/1368/3463/files/hp-mens-tops-4-tile_450x_crop_center@2x.progressive.jpg?v=1717692158" // Replace with actual image source
-            alt="YX1 Earphones"
-            className="w-24 h-24 mx-auto"
-          />
-          <div className="flex justify-between mb-2">
-            <div>Product:</div>
-            <div>YX1 Earphones</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div>Price:</div>
-            <div>${totalAmount.toFixed(2)}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div>Shipping:</div>
-            <div>${shippingCost.toFixed(2)}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div>VAT (included):</div>
-            <div>${vat.toFixed(2)}</div>
-          </div>
-          <div className="flex justify-between font-bold text-lg">
-            <div>Grand Total:</div>
-            <div>${grandTotal}</div>
-          </div>
-        </div>
+      <div className="w-full md:w-1/3">
+        <Card className="bg-white rounded-lg">
+          <CardContent className="p-6">
+            <h3 className="text-xl font-bold mb-4">Order Summary</h3>
+            <div className="flex justify-between mb-2">
+              <span>Subtotal</span>
+              <span>${totalPrice}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span>Shipping</span>
+              <span>Free</span>
+            </div>
+            <div className="flex justify-between font-bold text-lg mt-4 pt-4 border-t">
+              <span>Total</span>
+              <span>${totalPrice}</span>
+            </div>
+            <Button className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-2 rounded-full">
+              Proceed to Checkout
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 };
 
-export default Checkout;
+export default CheckoutPage;
