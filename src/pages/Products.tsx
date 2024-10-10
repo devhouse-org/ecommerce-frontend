@@ -101,6 +101,7 @@ const Products = () => {
     const cartItem = cart.find((item) => item.id === productId);
     return cartItem ? cartItem.quantity : 0;
   };
+  console.log(cart);
 
   return (
     <>
