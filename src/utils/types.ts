@@ -24,7 +24,6 @@ export type Category = {
   
   export type ProductT = {
     id: string;
-    title: string;
     name: string;
     description: string;
     price: number;
