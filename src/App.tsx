@@ -10,7 +10,7 @@ import Contact from "./pages/Contact";
 
 function App() {
   return (
-    <div className="mb-10">
+    <div className="mb2">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -22,7 +22,7 @@ function App() {
         
 
       </Routes>
-      {/* <MyFooter /> */}
+      <MyFooter />
     </div>
   );
 }
