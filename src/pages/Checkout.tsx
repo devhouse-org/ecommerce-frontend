@@ -4,13 +4,49 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { calculateTotalPrice } from "@/utils/help";
+import { useMutation } from "@tanstack/react-query";
 
-const CheckoutPage = () => {
-  const { cart, removeFromCart, updateQuantity } =
-    useCartStore();
+import axiosInstance from "@/utils/axiosInstance";
+
+const Checkout = () => {
+  const { cart, removeFromCart, updateQuantity } = useCartStore();
 
   // Call getTotalPrice to get the calculated total price
   const totalPrice = calculateTotalPrice(cart);
+
+  // Modify Mutation
+  const submitOrder = async (orderData) => {
+    const response = await axiosInstance.post("/order", orderData);
+    return response.data;
+  };
+
+  const mutation = useMutation(submitOrder, {
+    onSuccess: (data) => {
+      console.log("Order submitted successfully:", data);
+    },
+    onError: (error) => {
+      console.error("Error submitting order:", error);
+    },
+  });
+
+  const handleCheckout = () => {
+    const orderData = {
+      userId: "user-uuid-here",
+      total: totalPrice,
+      Cart: cart.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      status: "PENDING",
+      phoneNumber: "user-phone-number",
+      name: "User Name",
+      email: "user-email@example.com",
+      address: "User Address",
+    };
+
+    mutation.mutate(orderData);
+  };
 
   if (cart.length === 0) {
     return (
@@ -91,8 +127,12 @@ const CheckoutPage = () => {
               <span>Total</span>
               <span>${totalPrice}</span>
             </div>
-            <Button className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-2 rounded-full">
-              Proceed to Checkout
+            <Button
+              className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-2 rounded-full"
+              onClick={handleCheckout}
+              disabled={mutation.isPending} // Disable button when loading
+            >
+              {mutation.isPending ? "Processing..." : "Proceed to Checkout"}
             </Button>
           </CardContent>
         </Card>
@@ -101,4 +141,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default Checkout;
