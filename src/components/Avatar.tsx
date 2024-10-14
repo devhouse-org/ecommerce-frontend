@@ -8,7 +8,6 @@ import { useAuthStore } from "../store/index";
 
 export function Avatar() {
   const logout = useAuthStore((state) => state.logout);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -20,7 +19,7 @@ export function Avatar() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">
         <Button
-          onClick={logout}
+          onClick={() => logout()}
           className="text-red-600"
           variant={"destructive"}
         >
