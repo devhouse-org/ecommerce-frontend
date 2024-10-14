@@ -7,6 +7,9 @@ import ProductDetail from "./pages/ProductDetail";
 import AboutUs from "./pages/AboutUs";
 import Checkout from "./pages/Checkout";
 import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
   return (
@@ -17,10 +20,17 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/contact" element={<Contact />} />
-        
-
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
       <MyFooter />
     </div>

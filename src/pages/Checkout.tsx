@@ -5,7 +5,6 @@ import { ShoppingBag, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { calculateTotalPrice } from "@/utils/help";
 import { useMutation } from "@tanstack/react-query";
-
 import axiosInstance from "@/utils/axiosInstance";
 
 const Checkout = () => {
@@ -15,7 +14,7 @@ const Checkout = () => {
   const totalPrice = calculateTotalPrice(cart);
 
   // Modify Mutation
-  const submitOrder = async (orderData) => {
+  const submitOrder = async (orderData: any) => {
     const response = await axiosInstance.post("/order", orderData);
     return response.data;
   };
