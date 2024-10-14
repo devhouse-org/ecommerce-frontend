@@ -3,12 +3,14 @@ import { NavLink } from "react-router-dom";
 import { useCartStore } from "../store/index"; // Import Zustand store
 import { ShoppingCart } from "lucide-react"; // Import ShoppingCart from Lucide
 import CartPopup from "../components/CartPopup"; // Import the CartPopup component
+import { Avatar } from "./Avatar";
+import { useAuthStore } from "../store/index";
 
 const Navbar = () => {
   const { cart } = useCartStore(); // Access the cart state from Zustand
   const [isPopupOpen, setPopupOpen] = useState(false); // State to manage popup visibility
   const [isScrolled, setIsScrolled] = useState(false);
-
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   // Calculate the total number of items in the cart
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -29,11 +31,12 @@ const Navbar = () => {
     };
   }, []);
 
-
   return (
-    <nav className={`fixed w-full z-10 py-4 transition-colors duration-300 ${
-      isScrolled ? "bg-black" : "bg-black/85"
-    }`}>
+    <nav
+      className={`fixed w-full z-10 py-4 transition-colors duration-300 ${
+        isScrolled ? "bg-black" : "bg-black/85"
+      }`}
+    >
       <div className="container mx-auto px-8 flex justify-between items-center">
         <NavLink to="/">
           <div className="text-white text-2xl">MyApp</div>
@@ -60,7 +63,7 @@ const Navbar = () => {
           >
             Products
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/contact"
             className={({ isActive }) =>
               isActive
@@ -69,8 +72,8 @@ const Navbar = () => {
             }
           >
             Contact
-          </NavLink>
-          <NavLink
+          </NavLink> */}
+          {/* <NavLink
             to="/about"
             className={({ isActive }) =>
               isActive
@@ -79,7 +82,8 @@ const Navbar = () => {
             }
           >
             About
-          </NavLink>
+          </NavLink> */}
+          {isAuthenticated && <Avatar />}
           {/* Cart Icon with item count */}
           <div className="relative">
             <button
