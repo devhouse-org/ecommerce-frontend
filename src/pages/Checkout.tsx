@@ -20,7 +20,8 @@ const Checkout = () => {
     return response.data;
   };
 
-  const mutation = useMutation(submitOrder, {
+  const mutation = useMutation({
+    mutationFn: submitOrder,
     onSuccess: (data) => {
       console.log("Order submitted successfully:", data);
     },
@@ -31,7 +32,7 @@ const Checkout = () => {
 
   const handleCheckout = () => {
     const orderData = {
-      userId: "user-uuid-here",
+      userId: "14991c40-279f-472f-9f7d-f39fe6f3815d",
       total: totalPrice,
       Cart: cart.map((item) => ({
         id: item.id,
