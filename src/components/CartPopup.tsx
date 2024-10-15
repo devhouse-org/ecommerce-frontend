@@ -54,14 +54,13 @@ const CartPopup: React.FC<CartPopupProps> = ({ onClose }) => {
           {cart.map((item) => (
             <li key={item.id} className="flex items-center mb-2">
               <img
-                src={item.imageUrl}
-                alt={item.title}
+                src={item.image}
+                alt={item.name}
                 className="w-16 h-16 object-cover rounded mr-2"
               />
               <div className="flex flex-grow justify-between items-center">
                 <div>
                   <p>{item.name}</p>
-                  <h4 className="font-semibold">{item.title}</h4>
                   {/* Price */}
                   <span className="font-semibold mr-4">
                     ${(item.price * item.quantity).toFixed(2)}

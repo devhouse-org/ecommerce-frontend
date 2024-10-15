@@ -19,7 +19,7 @@ const fetchCategories = async () => {
   return response.data;
 };
 
-const fetchProducts = async ({ queryKey }: { queryKey: readonly [string, string | undefined] }) => {
+const fetchProducts = async ({ queryKey }: { queryKey: [string, string | undefined] }) => {
   const [_, categoryId] = queryKey;
   const url = categoryId ? `/product/category/${categoryId}` : '/product';
   const response = await axiosInstance.get(url);
