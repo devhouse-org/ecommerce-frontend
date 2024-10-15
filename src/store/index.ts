@@ -1,4 +1,4 @@
-import { CartState } from "@/utils/types";
+import { CartState, WishlistState, ProductListProps } from "@/utils/types";
 import { create } from "zustand";
 
 // Create the Zustand store
@@ -52,6 +52,33 @@ export const useCartStore = create<CartState>((set) => ({
   clearCart: () => {
     localStorage.removeItem("cart"); // Clear localStorage
     set({ cart: [] }); // This updates the store state immediately
+  },
+}));
+
+export const useWishlistStore = create<WishlistState>((set) => ({
+  wishlist: JSON.parse(localStorage.getItem("wishlist") || "[]"),
+
+  addToWishlist: (product: ProductListProps) =>
+    set((state) => {
+      const isProductInWishlist = state.wishlist.some((item) => item.id === product.id);
+      if (!isProductInWishlist) {
+        const newWishlist = [...state.wishlist, product];
+        localStorage.setItem("wishlist", JSON.stringify(newWishlist));
+        return { wishlist: newWishlist };
+      }
+      return state;
+    }),
+
+  removeFromWishlist: (productId: string) =>
+    set((state) => {
+      const updatedWishlist = state.wishlist.filter((item) => item.id !== productId);
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      return { wishlist: updatedWishlist };
+    }),
+
+  clearWishlist: () => {
+    localStorage.removeItem("wishlist");
+    set({ wishlist: [] });
   },
 }));
 

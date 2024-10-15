@@ -5,6 +5,8 @@ import { ShoppingCart } from "lucide-react"; // Import ShoppingCart from Lucide
 import CartPopup from "../components/CartPopup"; // Import the CartPopup component
 import { Avatar } from "./Avatar";
 import { useAuthStore } from "../store/index";
+import { Heart } from "lucide-react";
+import { useWishlistStore } from "../store/index";
 
 const Navbar = () => {
   const { cart } = useCartStore(); // Access the cart state from Zustand
@@ -15,6 +17,8 @@ const Navbar = () => {
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   const togglePopup = () => setPopupOpen(!isPopupOpen); // Toggle popup visibility
+  const { wishlist } = useWishlistStore();
+  const wishlistItemCount = wishlist.length;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,6 +72,16 @@ const Navbar = () => {
             <Avatar>
             </Avatar>
           )}
+          {/* Wishlist Icon */}
+          <NavLink to="/wishlist" className="text-white relative focus:outline-none">
+            <Heart size={24} />
+            {wishlistItemCount > 0 && (
+              <span className="absolute -top-3 -right-3 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                {wishlistItemCount}
+              </span>
+            )}
+          </NavLink>
+
           {/* Cart Icon with item count */}
           <div className="relative">
             <button

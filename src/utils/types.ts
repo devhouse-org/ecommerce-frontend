@@ -6,6 +6,10 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  ratings: {
+    score: number;
+    comment: string;
+  }[];
 }
 
 // Define the shape of the store's state
@@ -30,11 +34,12 @@ export type ProductT = {
   imageUrl: string;
 };
 
-export type ProductListProps = {
+export interface ProductListProps {
   id: string;
   createdAt: string;
   updatedAt: string;
   image: string;
   name: string;
+  description: string;
   products: CartItem[];
-};
+}

@@ -6,11 +6,11 @@ import {
   ShoppingCart,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 import axiosInstance from "../utils/axiosInstance";
-import { useCartStore } from "../store/index";
+import { useCartStore, useWishlistStore } from "../store/index";
 import Spinner from "@/components/Spinner";
 import { Category, ProductListProps } from "@/utils/types";
 
@@ -34,11 +34,38 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { addToCart, cart, removeFromCart, updateQuantity } = useCartStore(); // Access Zustand store
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined);
+  const categoriesRef = useRef<HTMLDivElement>(null);
+  const { addToWishlist, removeFromWishlist, wishlist } = useWishlistStore();
 
   const { data: products = [], isLoading: productsLoading } = useQuery<ProductListProps[]>({
     queryKey: ["products", selectedCategoryId],
     queryFn: fetchProducts,
   });
+
+  // Function to scroll the selected category to the center
+  const scrollToCenter = (categoryId: string | undefined) => {
+    if (!categoriesRef.current) return;
+
+    const container = categoriesRef.current;
+    const selectedButton = container.querySelector(`[data-category-id="${categoryId}"]`) as HTMLElement;
+
+    if (selectedButton) {
+      const containerWidth = container.offsetWidth;
+      const buttonWidth = selectedButton.offsetWidth;
+      const scrollLeft = selectedButton.offsetLeft - containerWidth / 2 + buttonWidth / 2;
+
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Update the category selection function
+  const handleCategorySelect = (categoryId: string | undefined) => {
+    setSelectedCategoryId(categoryId);
+    scrollToCenter(categoryId);
+  };
 
   // Show loading state for categories
   if (categoriesLoading) {
@@ -71,6 +98,8 @@ const Products = () => {
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const isInWishlist = (productId: string) => wishlist.some(item => item.id === productId);
 
   return (
     <>
@@ -111,10 +140,14 @@ const Products = () => {
 
       {/* Category selection */}
       <div className="container mx-auto px-4 mt-10">
-        <div className="flex flex-wrap gap-y-4 2xl:gap-y-0 justify-start xl:justify-center gap-x-3 overflow-x-auto whitespace-nowrap pb-4 scrollbar-custom ">
+        <div 
+          ref={categoriesRef}
+          className="flex overflow-x-auto whitespace-nowrap pb-4 scrollbar-hide"
+        >
           <button
-            onClick={() => setSelectedCategoryId(undefined)}
-            className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out ${
+            data-category-id="undefined"
+            onClick={() => handleCategorySelect(undefined)}
+            className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${
               selectedCategoryId === undefined
                 ? "text-white bg-green-600 shadow-md hover:bg-green-700"
                 : "text-gray-700 bg-gray-100 hover:bg-gray-200"
@@ -125,8 +158,9 @@ const Products = () => {
           {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setSelectedCategoryId(category.id)}
-              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out ${
+              data-category-id={category.id}
+              onClick={() => handleCategorySelect(category.id)}
+              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${
                 selectedCategoryId === category.id
                   ? "text-white bg-green-600 shadow-md hover:bg-green-700"
                   : "text-gray-700 bg-gray-100 hover:bg-gray-200"
@@ -137,7 +171,7 @@ const Products = () => {
           ))}
           <Link
             to="/settings"
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-300"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-300 flex-shrink-0"
           >
             <Settings2 size={20} className="text-gray-600" />
           </Link>
@@ -149,6 +183,7 @@ const Products = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product) => {
             const quantityInCart = getQuantityInCart(product.id);
+            const productInWishlist = isInWishlist(product.id);
             return (
               <div
                 key={product.id}
@@ -213,8 +248,11 @@ const Products = () => {
                   )}
 
                   <div className="flex space-x-2">
-                    <button className="text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-200">
-                      <Heart size={20} />
+                    <button 
+                      className={`text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-200 ${productInWishlist ? 'text-red-500' : ''}`}
+                      onClick={() => productInWishlist ? removeFromWishlist(product.id) : addToWishlist(product)}
+                    >
+                      <Heart size={20} fill={productInWishlist ? 'currentColor' : 'none'} />
                     </button>
                   </div>
                 </div>

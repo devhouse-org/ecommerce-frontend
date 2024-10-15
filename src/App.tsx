@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import OrdersPage from "./pages/orders";
+import WishlistPage from "./pages/WishlistPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           }
         >
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/orders" element={<OrdersPage />} />
         </Route>
         <Route path="/contact" element={<Contact />} />
