@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useCartStore } from "../store/index"; // Import Zustand store
 import { ShoppingCart } from "lucide-react"; // Import ShoppingCart from Lucide
@@ -63,27 +63,11 @@ const Navbar = () => {
           >
             Products
           </NavLink>
-          {/* <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold text-green-600 hover:text-green-500 transition ease-in-out"
-                : "text-gray-300 hover:text-white"
-            }
-          >
-            Contact
-          </NavLink> */}
-          {/* <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold text-green-600 hover:text-green-500 transition ease-in-out"
-                : "text-gray-300 hover:text-white"
-            }
-          >
-            About
-          </NavLink> */}
-          {isAuthenticated && <Avatar />}
+
+          {isAuthenticated && (
+            <Avatar>
+            </Avatar>
+          )}
           {/* Cart Icon with item count */}
           <div className="relative">
             <button

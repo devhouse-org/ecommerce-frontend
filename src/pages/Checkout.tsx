@@ -2,16 +2,59 @@ import { useCartStore } from "../store/index";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { calculateTotalPrice } from "@/utils/help";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/utils/axiosInstance";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
+// Define the schema for order data
+const orderSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+  address: z.string().min(1, "Address is required"),
+});
+
+type OrderFormData = z.infer<typeof orderSchema>;
 
 const Checkout = () => {
-  const { cart, removeFromCart, updateQuantity } = useCartStore();
-
+  const { cart, removeFromCart, updateQuantity,clearCart } = useCartStore();
+  const navigate = useNavigate();
   // Call getTotalPrice to get the calculated total price
   const totalPrice = calculateTotalPrice(cart);
+
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<OrderFormData>({
+    resolver: zodResolver(orderSchema),
+  });
+
+  const userId = localStorage.getItem("userId");
+
+  // Fetch user data
+  const { data: userData, isLoading: isUserLoading } = useQuery({
+    queryKey: ['user', userId],
+    queryFn: async () => {
+      if (!userId) return null;
+      const response = await axiosInstance.get(`/users/${userId}`);
+      return response.data;
+    },
+    enabled: !!userId,
+  });
+
+  // Pre-fill form with user data
+  useEffect(() => {
+    if (userData) {
+      setValue("name", userData.name || "");
+      setValue("email", userData.email || "");
+      setValue("phoneNumber", userData.phoneNumber || "");
+    }
+  }, [userData, setValue]);
 
   // Modify Mutation
   const submitOrder = async (orderData: any) => {
@@ -23,15 +66,25 @@ const Checkout = () => {
     mutationFn: submitOrder,
     onSuccess: (data) => {
       console.log("Order submitted successfully:", data);
+      toast("Order Successfully Placed", {
+        description: "Order ID: " + data.id + " will be delivered to " + data.address,
+        action: {
+          label: "🎊",
+          onClick: () => console.log("great!"),
+        },
+      })
+      // clear cart 
+      clearCart()
+      navigate("/orders");
     },
     onError: (error) => {
       console.error("Error submitting order:", error);
     },
   });
 
-  const handleCheckout = () => {
+  const onSubmit = (formData: OrderFormData) => {
     const orderData = {
-      userId: "14991c40-279f-472f-9f7d-f39fe6f3815d",
+      userId,
       total: totalPrice,
       Cart: cart.map((item) => ({
         id: item.id,
@@ -39,10 +92,7 @@ const Checkout = () => {
         price: item.price,
       })),
       status: "PENDING",
-      phoneNumber: "user-phone-number",
-      name: "User Name",
-      email: "user-email@example.com",
-      address: "User Address",
+      ...formData,
     };
 
     mutation.mutate(orderData);
@@ -73,8 +123,7 @@ const Checkout = () => {
               <img
                 className="w-24 h-24 object-cover rounded-lg mr-4"
                 src={
-                  item.imageUrl ||
-                  "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
+                  item.image
                 }
                 alt={item.name}
               />
@@ -127,13 +176,55 @@ const Checkout = () => {
               <span>Total</span>
               <span>${totalPrice}</span>
             </div>
-            <Button
-              className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-2 rounded-full"
-              onClick={handleCheckout}
-              disabled={mutation.isPending} // Disable button when loading
-            >
-              {mutation.isPending ? "Processing..." : "Proceed to Checkout"}
-            </Button>
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  {...register("name")}
+                  className="w-full mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isUserLoading}
+                />
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  {...register("email")}
+                  className="w-full mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isUserLoading}
+                />
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input
+                  id="phoneNumber"
+                  {...register("phoneNumber")}
+                  className="w-full mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isUserLoading}
+                />
+                {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  {...register("address")}
+                  className="w-full mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
+              </div>
+              <Button
+                type="submit"
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-full transition duration-200 ease-in-out transform hover:scale-105"
+                disabled={mutation.isPending || isUserLoading}
+              >
+                {mutation.isPending ? "Processing..." : "Place Order"}
+              </Button>
+            </form>
           </CardContent>
         </Card>
       </div>

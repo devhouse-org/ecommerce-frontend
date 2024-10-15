@@ -4,7 +4,7 @@ export interface CartItem {
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
+  image: string;
   quantity: number;
 }
 
@@ -34,6 +34,7 @@ export type ProductListProps = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  image: string;
   name: string;
   products: CartItem[];
 };

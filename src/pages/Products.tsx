@@ -16,39 +16,29 @@ import { Category, ProductListProps } from "@/utils/types";
 
 const fetchCategories = async () => {
   const response = await axiosInstance.get("/category");
-  return response.data; // Return the data directly
+  return response.data;
 };
 
-const fetchProducts = async (categoryId: string) => {
-  const response = await axiosInstance.get(`/product/category/${categoryId}`);
-  return response.data; // Return the data directly
+const fetchProducts = async ({ queryKey }: { queryKey: readonly [string, string | undefined] }) => {
+  const [_, categoryId] = queryKey;
+  const url = categoryId ? `/product/category/${categoryId}` : '/product';
+  const response = await axiosInstance.get(url);
+  return response.data;
 };
 
 const Products = () => {
-  const { data: categories = [], isLoading: categoriesLoading } = useQuery<
-    Category[]
-  >({
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
   const [searchTerm, setSearchTerm] = useState("");
   const { addToCart, cart, removeFromCart, updateQuantity } = useCartStore(); // Access Zustand store
-  const [selectedCategoryId, setSelectedCategoryId] = useState<
-    string | undefined
-  >(undefined); // Default to undefined
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined);
 
-  const { data: categoryWithProducts, isLoading: productsLoading } =
-    useQuery<ProductListProps>({
-      queryKey: ["products", selectedCategoryId],
-      queryFn: () => fetchProducts(selectedCategoryId!),
-      enabled: !!selectedCategoryId, // Only run the query if selectedCategoryId is available
-    });
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      setSelectedCategoryId(categories[0]?.id); // Set default category when component mounts
-    }
-  }, [categories]);
+  const { data: products = [], isLoading: productsLoading } = useQuery<ProductListProps[]>({
+    queryKey: ["products", selectedCategoryId],
+    queryFn: fetchProducts,
+  });
 
   // Show loading state for categories
   if (categoriesLoading) {
@@ -76,7 +66,7 @@ const Products = () => {
   console.log(cart);
 
   // Filter products based on search term
-  const filteredProducts = categoryWithProducts?.products.filter(
+  const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -122,6 +112,16 @@ const Products = () => {
       {/* Category selection */}
       <div className="container mx-auto px-4 mt-10">
         <div className="flex flex-wrap gap-y-4 2xl:gap-y-0 justify-start xl:justify-center gap-x-3 overflow-x-auto whitespace-nowrap pb-4 scrollbar-custom ">
+          <button
+            onClick={() => setSelectedCategoryId(undefined)}
+            className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out ${
+              selectedCategoryId === undefined
+                ? "text-white bg-green-600 shadow-md hover:bg-green-700"
+                : "text-gray-700 bg-gray-100 hover:bg-gray-200"
+            }`}
+          >
+            All Products
+          </button>
           {categories.map((category) => (
             <button
               key={category.id}
@@ -147,8 +147,8 @@ const Products = () => {
       {/* Card Section */}
       <div className="container mx-auto mt-10 px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts?.map((product) => {
-            const quantityInCart = getQuantityInCart(product.id); // Get quantity for this product
+          {filteredProducts.map((product) => {
+            const quantityInCart = getQuantityInCart(product.id);
             return (
               <div
                 key={product.id}
@@ -160,9 +160,7 @@ const Products = () => {
                 >
                   <img
                     className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
-                    src={
-                      "https://media.istockphoto.com/id/1018293976/photo/attractive-fashionable-woman-posing-in-white-trendy-sweater-beige-pants-and-autumn-heels-on.jpg?s=612x612&w=0&k=20&c=_CLawpZw6l9z0uV4Uon-7lqaS013E853ub883pkIK3c="
-                    }
+                    src={product.image}
                     alt={product.name}
                   />
                 </Link>

@@ -10,6 +10,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import OrdersPage from "./pages/orders";
 
 function App() {
   return (
@@ -21,13 +22,14 @@ function App() {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/about" element={<AboutUs />} />
         <Route
-          path="/checkout"
           element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
+            <ProtectedRoute />
+
           }
-        />
+        >
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orders" element={<OrdersPage />} />
+        </Route>
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

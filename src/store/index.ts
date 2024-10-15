@@ -57,22 +57,22 @@ export const useCartStore = create<CartState>((set) => ({
 
 interface AuthState {
   isAuthenticated: boolean;
-  login: (token: string, userId: string, email: string) => void;
+  login: (token: string, userId: string) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: !!localStorage.getItem("jwtToken"), // Check if authenticated based on localStorage
-  login: (token, userId, email) => {
+  login: (token, userId) => {
     localStorage.setItem("jwtToken", token);
     localStorage.setItem("userId", userId);
-    localStorage.setItem("email", email);
     set({ isAuthenticated: true });
   },
   logout: () => {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("email");
+    localStorage.removeItem("cart");
     set({ isAuthenticated: false });
   },
 }));

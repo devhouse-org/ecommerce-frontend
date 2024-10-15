@@ -25,7 +25,7 @@ export default function Login() {
     },
     onSuccess: (data) => {
       // Use the login function from the store to update auth state
-      login(data.access_token, data.user.id, data.user.email);
+      login(data.access_token, data.user.id);
       navigate("/"); // Redirect to home page
     },
     onError: () => {
