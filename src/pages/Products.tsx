@@ -19,12 +19,6 @@ const fetchCategories = async () => {
   return response.data;
 };
 
-const fetchProducts = async ({ queryKey }: { queryKey: [string, string | undefined] }) => {
-  const [_, categoryId] = queryKey;
-  const url = categoryId ? `/product/category/${categoryId}` : '/product';
-  const response = await axiosInstance.get(url);
-  return response.data;
-};
 
 const Products = () => {
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
@@ -39,7 +33,12 @@ const Products = () => {
 
   const { data: products = [], isLoading: productsLoading } = useQuery<ProductListProps[]>({
     queryKey: ["products", selectedCategoryId],
-    queryFn: fetchProducts,
+    queryFn: async ({ queryKey }) => {
+      const [_, categoryId] = queryKey;
+      const url = categoryId ? `/product/category/${categoryId}` : '/product';
+      const response = await axiosInstance.get(url);
+      return response.data;
+    },
   });
 
   // Function to scroll the selected category to the center
@@ -76,21 +75,13 @@ const Products = () => {
     );
   }
 
-  // Show loading state for products
-  if (productsLoading) {
-    return (
-      <div className="flex justify-center h-screen items-center self-center mx-auto">
-        <Spinner />
-      </div>
-    );
-  }
+
 
   // Function to get the quantity of a specific product in the cart
   const getQuantityInCart = (productId: string) => {
     const cartItem = cart.find((item) => item.id === productId);
     return cartItem ? cartItem.quantity : 0;
   };
-  console.log(cart);
 
   // Filter products based on search term
   const filteredProducts = products.filter(
@@ -140,18 +131,17 @@ const Products = () => {
 
       {/* Category selection */}
       <div className="container mx-auto px-4 mt-10">
-        <div 
+        <div
           ref={categoriesRef}
           className="flex overflow-x-auto whitespace-nowrap pb-4 scrollbar-hide"
         >
           <button
             data-category-id="undefined"
             onClick={() => handleCategorySelect(undefined)}
-            className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${
-              selectedCategoryId === undefined
+            className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${selectedCategoryId === undefined
                 ? "text-white bg-green-600 shadow-md hover:bg-green-700"
                 : "text-gray-700 bg-gray-100 hover:bg-gray-200"
-            }`}
+              }`}
           >
             All Products
           </button>
@@ -160,11 +150,10 @@ const Products = () => {
               key={category.id}
               data-category-id={category.id}
               onClick={() => handleCategorySelect(category.id)}
-              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${
-                selectedCategoryId === category.id
+              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${selectedCategoryId === category.id
                   ? "text-white bg-green-600 shadow-md hover:bg-green-700"
                   : "text-gray-700 bg-gray-100 hover:bg-gray-200"
-              }`}
+                }`}
             >
               {category.name}
             </button>
@@ -180,86 +169,95 @@ const Products = () => {
 
       {/* Card Section */}
       <div className="container mx-auto mt-10 px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => {
-            const quantityInCart = getQuantityInCart(product.id);
-            const productInWishlist = isInWishlist(product.id);
-            return (
-              <div
-                key={product.id}
-                className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
-              >
-                <Link
-                  to={`/product/${product.id}`}
-                  className="block overflow-hidden"
-                >
-                  <img
-                    className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
-                    src={product.image}
-                    alt={product.name}
-                  />
-                </Link>
-                <div className="p-4">
-                  <Link to={`/product/${product.id}`}>
-                    <h3 className="font-semibold text-lg mb-2 hover:text-green-600 transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-                      {product.description}
-                    </p>
-                    <p className="font-bold text-lg text-green-600">
-                      ${product.price.toFixed(2)}
-                    </p>
-                  </Link>
-                </div>
-                <div className="px-4 py-3 bg-gray-50 flex items-center justify-between">
-                  {quantityInCart === 0 ? (
-                    <button
-                      className="flex items-center justify-center bg-green-600 hover:bg-green-600 text-white rounded-full px-4 py-1.5 transition-colors duration-300"
-                      onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
-                    >
-                      <ShoppingCart size={18} className="mr-2" />
-                      Add to Cart
-                    </button>
-                  ) : (
-                    <div className="flex items-center bg-gray-200 rounded-full">
-                      <button
-                        className="px-3 py-1 text-gray-600 hover:text-green-600 transition-colors"
-                        onClick={() => {
-                          quantityInCart === 1
-                            ? removeFromCart(product.id)
-                            : updateQuantity(product.id, quantityInCart - 1);
-                        }}
-                      >
-                        -
-                      </button>
-                      <span className="px-3 font-semibold">
-                        {quantityInCart}
-                      </span>
-                      <button
-                        className="px-3 py-1 text-gray-600 hover:text-green-600 transition-colors"
-                        onClick={() =>
-                          updateQuantity(product.id, quantityInCart + 1)
-                        }
-                      >
-                        +
-                      </button>
-                    </div>
-                  )}
+        {
+          productsLoading ? (
+            <div className="flex justify-center items-center h-screen self-center mx-auto">
+              <Spinner />
+            </div>
+          ) : (
 
-                  <div className="flex space-x-2">
-                    <button 
-                      className={`text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-200 ${productInWishlist ? 'text-red-500' : ''}`}
-                      onClick={() => productInWishlist ? removeFromWishlist(product.id) : addToWishlist(product)}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredProducts.map((product) => {
+                const quantityInCart = getQuantityInCart(product.id);
+                const productInWishlist = isInWishlist(product.id);
+                return (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <Link
+                      to={`/product/${product.id}`}
+                      className="block overflow-hidden"
                     >
-                      <Heart size={20} fill={productInWishlist ? 'currentColor' : 'none'} />
-                    </button>
+                      <img
+                        className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
+                        src={product.image}
+                        alt={product.name}
+                      />
+                    </Link>
+                    <div className="p-4">
+                      <Link to={`/product/${product.id}`}>
+                        <h3 className="font-semibold text-lg mb-2 hover:text-green-600 transition-colors">
+                          {product.name}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                          {product.description}
+                        </p>
+                        <p className="font-bold text-lg text-green-600">
+                          ${product.price.toFixed(2)}
+                        </p>
+                      </Link>
+                    </div>
+                    <div className="px-4 py-3 bg-gray-50 flex items-center justify-between">
+                      {quantityInCart === 0 ? (
+                        <button
+                          className="flex items-center justify-center bg-green-600 hover:bg-green-600 text-white rounded-full px-4 py-1.5 transition-colors duration-300"
+                          onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
+                        >
+                          <ShoppingCart size={18} className="mr-2" />
+                          Add to Cart
+                        </button>
+                      ) : (
+                        <div className="flex items-center bg-gray-200 rounded-full">
+                          <button
+                            className="px-3 py-1 text-gray-600 hover:text-green-600 transition-colors"
+                            onClick={() => {
+                              quantityInCart === 1
+                                ? removeFromCart(product.id)
+                                : updateQuantity(product.id, quantityInCart - 1);
+                            }}
+                          >
+                            -
+                          </button>
+                          <span className="px-3 font-semibold">
+                            {quantityInCart}
+                          </span>
+                          <button
+                            className="px-3 py-1 text-gray-600 hover:text-green-600 transition-colors"
+                            onClick={() =>
+                              updateQuantity(product.id, quantityInCart + 1)
+                            }
+                          >
+                            +
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="flex space-x-2">
+                        <button
+                          className={`text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-200 ${productInWishlist ? 'text-red-500' : ''}`}
+                          onClick={() => productInWishlist ? removeFromWishlist(product.id) : addToWishlist(product)}
+                        >
+                          <Heart size={20} fill={productInWishlist ? 'currentColor' : 'none'} />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                );
+              })}
+            </div>
+          )
+        }
       </div>
     </>
   );
