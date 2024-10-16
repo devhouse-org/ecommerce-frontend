@@ -4,9 +4,8 @@ import {
   Search,
   Settings2,
   ShoppingCart,
-  X,
 } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 import axiosInstance from "../utils/axiosInstance";
@@ -90,7 +89,7 @@ const Products = () => {
       product.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const isInWishlist = (productId: string) => wishlist.some(item => item.id === productId);
+  const isInWishlist = (productId: string) => wishlist.some((item: { id: string }) => item.id === productId);
 
   return (
     <>
@@ -133,7 +132,7 @@ const Products = () => {
       <div className="container mx-auto px-4 mt-10">
         <div
           ref={categoriesRef}
-          className="flex overflow-x-auto whitespace-nowrap pb-4 scrollbar-hide"
+          className="flex overflow-x-auto justify-center whitespace-nowrap pb-4 scrollbar-hide"
         >
           <button
             data-category-id="undefined"

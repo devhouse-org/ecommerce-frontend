@@ -12,30 +12,32 @@ import Register from "./pages/Register";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import OrdersPage from "./pages/orders";
 import WishlistPage from "./pages/WishlistPage";
+import Profile from "./pages/Profile"; // Import the new Profile component
+import { useAuthStore } from "./store/index";
 
 function App() {
-  return (
-    <div className="mb2">
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route
-          element={
-            <ProtectedRoute />
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-          }
-        >
-          <Route path="/checkout" element={<Checkout />} />
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className={`flex-grow pt-16 ${isAuthenticated ? 'pb-16 md:pb-0' : ''}`}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="/wishlist" element={<WishlistPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
-        </Route>
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/profile" element={<Profile />} /> {/* Add the new Profile route */}
+          </Route>
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </main>
       <MyFooter />
     </div>
   );

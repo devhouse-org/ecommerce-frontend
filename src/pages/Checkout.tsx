@@ -66,12 +66,9 @@ const Checkout = () => {
     mutationFn: submitOrder,
     onSuccess: (data) => {
       console.log("Order submitted successfully:", data);
-      toast("Order Successfully Placed", {
-        description: "Order ID: " + data.id + " will be delivered to " + data.address,
-        action: {
-          label: "🎊",
-          onClick: () => console.log("great!"),
-        },
+      toast.success("Order Successfully Placed", {
+        description: "Your order will be delivered to " + data.address,
+        
       })
       // clear cart 
       clearCart()
@@ -166,7 +163,7 @@ const Checkout = () => {
             <h3 className="text-xl font-bold mb-4">Order Summary</h3>
             <div className="flex justify-between mb-2">
               <span>Subtotal</span>
-              <span>${totalPrice}</span>
+              <span>${totalPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
             </div>
             <div className="flex justify-between mb-2">
               <span>Shipping</span>
@@ -174,7 +171,7 @@ const Checkout = () => {
             </div>
             <div className="flex justify-between font-bold text-lg mt-4 pt-4 border-t">
               <span>Total</span>
-              <span>${totalPrice}</span>
+              <span>${totalPrice.toLocaleString("en-US")}</span>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
               <div>

@@ -34,12 +34,5 @@ export type ProductT = {
   imageUrl: string;
 };
 
-export interface ProductListProps {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  image: string;
-  name: string;
-  description: string;
-  products: CartItem[];
+export interface ProductListProps extends CartItem {
 }

@@ -7,12 +7,13 @@ import {
 import { useAuthStore } from "../store/index";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/utils/axiosInstance";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 // User type based on the Prisma schema
 type User = {
   id: string;
   email: string;
-  image: Buffer | null;
+  image: string | null;
   role: 'USER' | 'ADMIN'; // Assuming these are the possible roles
   password: string;
   name: string | null;
@@ -21,7 +22,7 @@ type User = {
   updatedAt: string;
 };
 
-export function Avatar() {
+export default function UserProfileAvatar() {
   const logout = useAuthStore((state) => state.logout);
   const userId = localStorage.getItem('userId');
 
@@ -37,11 +38,13 @@ export function Avatar() {
         {isLoading ? (
           <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
         ) : (
-          <img
-            className="w-8 h-8 rounded-full cursor-pointer"
-            src={userData?.image ? `data:image/jpeg;base64,${userData?.image}}` : undefined}
-            alt="User Avatar"
-          />
+          <Avatar className="w-8 h-8 cursor-pointer">
+            <AvatarImage
+              src={userData?.image ? userData.image : undefined}
+              alt="User Avatar"
+            />
+            <AvatarFallback className="bg-slate-100">{userData?.name?.[0] || 'U'}</AvatarFallback>
+          </Avatar>
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">
