@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import Navbar from "./components/Navbar";
+import { MyFooter } from "./components/Footer";
+import ProductDetail from "./pages/ProductDetail";
+import AboutUs from "./pages/AboutUs";
+import Checkout from "./pages/Checkout";
+import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProtectedRoute from "./utils/ProtectedRoute";
+import OrdersPage from "./pages/orders";
+import WishlistPage from "./pages/WishlistPage";
+import Profile from "./pages/Profile"; // Import the new Profile component
+import { useAuthStore } from "./store/index";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className={`flex-grow pt-16 ${isAuthenticated ? 'pb-16 md:pb-0' : ''}`}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/profile" element={<Profile />} /> {/* Add the new Profile route */}
+          </Route>
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </main>
+      <MyFooter />
+    </div>
+  );
 }
 
-export default App
+export default App;
