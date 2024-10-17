@@ -1,11 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { useCartStore, useAuthStore, useWishlistStore, useComparisonStore } from "../store/index";
-import { ShoppingCart, Heart, Menu, X, Home, Package, User, Trash2, Scale } from "lucide-react";
+import { ShoppingCart, Heart, Menu, X, Home, Package, User, Trash2, Scale, Award, Coins } from "lucide-react";
 import CartPopup from "./CartPopup";
-import UserProfileAvatar from "./UserProfileAvatar";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
-import { Button } from "./ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 
 const Navbar = () => {
   const { cart, removeFromCart, updateQuantity } = useCartStore();
@@ -15,12 +13,12 @@ const Navbar = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
   const wishlistItemCount = wishlist.length;
 
-  const togglePopup = () => setPopupOpen(!isPopupOpen);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   useEffect(() => {
@@ -79,12 +77,7 @@ const Navbar = () => {
               <NavItem to="/">Home</NavItem>
               <NavItem to="/products">Products</NavItem>
               <NavItem to="/auctions">Auctions</NavItem>
-              {isAuthenticated && (
-                <>
-                  <NavItem to="/profile">Profile</NavItem>
-                  <UserProfileAvatar />
-                </>
-              )}
+
               <NavLink to="/wishlist" className="text-white relative focus:outline-none hover:text-green-400 transition duration-300">
                 <Heart size={24} />
                 {wishlistItemCount > 0 && (
@@ -173,11 +166,11 @@ const Navbar = () => {
                   {
                     cart.length > 0 && (
                       <div className="mt-6 w-full">
-                      <Link className="bg-green-500 block text-center hover:bg-green-600 transition duration-300 text-white px-4 py-2 rounded-full w-full" to="/checkout">
-                        Proceed to Checkout
-                      </Link>
-                    </div>
-                  )}
+                        <Link className="bg-green-500 block text-center hover:bg-green-600 transition duration-300 text-white px-4 py-2 rounded-full w-full" to="/checkout">
+                          Proceed to Checkout
+                        </Link>
+                      </div>
+                    )}
                 </SheetContent>
               </Sheet>
             </div>
@@ -201,7 +194,7 @@ const Navbar = () => {
           <div className="flex flex-col h-full justify-start pt-20 items-center space-y-8">
             <NavItem to="/">Home</NavItem>
             <NavItem to="/products">Products</NavItem>
-            {isAuthenticated && <NavItem to="/profile">Profile</NavItem>}
+
             <NavLink to="/wishlist" className="text-white relative focus:outline-none hover:text-green-400 transition duration-300">
               <Heart size={24} />
               {wishlistItemCount > 0 && (
