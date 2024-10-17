@@ -4,12 +4,13 @@ import {
   Search,
   Settings2,
   ShoppingCart,
+  Scale,
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 import axiosInstance from "../utils/axiosInstance";
-import { useCartStore, useWishlistStore } from "../store/index";
+import { useCartStore, useWishlistStore, useComparisonStore } from "../store/index";
 import Spinner from "@/components/Spinner";
 import { Category, ProductListProps } from "@/utils/types";
 
@@ -29,6 +30,7 @@ const Products = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined);
   const categoriesRef = useRef<HTMLDivElement>(null);
   const { addToWishlist, removeFromWishlist, wishlist } = useWishlistStore();
+  const { addToComparison, removeFromComparison, comparisonList } = useComparisonStore();
 
   const { data: products = [], isLoading: productsLoading } = useQuery<ProductListProps[]>({
     queryKey: ["products", selectedCategoryId],
@@ -90,6 +92,8 @@ const Products = () => {
   );
 
   const isInWishlist = (productId: string) => wishlist.some((item: { id: string }) => item.id === productId);
+
+  const isInComparison = (productId: string) => comparisonList.some((item: { id: string }) => item.id === productId);
 
   return (
     <>
@@ -248,6 +252,12 @@ const Products = () => {
                           onClick={() => productInWishlist ? removeFromWishlist(product.id) : addToWishlist(product)}
                         >
                           <Heart size={20} fill={productInWishlist ? 'currentColor' : 'none'} />
+                        </button>
+                        <button
+                          className={`text-gray-600 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-gray-200 ${isInComparison(product.id) ? 'text-blue-500' : ''}`}
+                          onClick={() => isInComparison(product.id) ? removeFromComparison(product.id) : addToComparison(product)}
+                        >
+                          <Scale size={20} fill={isInComparison(product.id) ? 'currentColor' : 'none'} />
                         </button>
                       </div>
                     </div>

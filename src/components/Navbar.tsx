@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink, Link } from "react-router-dom";
-import { useCartStore, useAuthStore, useWishlistStore } from "../store/index";
-import { ShoppingCart, Heart, Menu, X, Home, Package, User, Trash2 } from "lucide-react";
+import { useCartStore, useAuthStore, useWishlistStore, useComparisonStore } from "../store/index";
+import { ShoppingCart, Heart, Menu, X, Home, Package, User, Trash2, Scale } from "lucide-react";
 import CartPopup from "./CartPopup";
 import UserProfileAvatar from "./UserProfileAvatar";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
@@ -10,6 +10,7 @@ import { Button } from "./ui/button";
 const Navbar = () => {
   const { cart, removeFromCart, updateQuantity } = useCartStore();
   const { wishlist } = useWishlistStore();
+  const { comparisonList } = useComparisonStore();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -88,6 +89,14 @@ const Navbar = () => {
                 {wishlistItemCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                     {wishlistItemCount}
+                  </span>
+                )}
+              </NavLink>
+              <NavLink to="/comparison" className="text-white relative focus:outline-none hover:text-green-400 transition duration-300">
+                <Scale size={24} />
+                {comparisonList.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {comparisonList.length}
                   </span>
                 )}
               </NavLink>
@@ -197,6 +206,14 @@ const Navbar = () => {
               {wishlistItemCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {wishlistItemCount}
+                </span>
+              )}
+            </NavLink>
+            <NavLink to="/comparison" className="text-white relative focus:outline-none hover:text-green-400 transition duration-300">
+              <Scale size={24} />
+              {comparisonList.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {comparisonList.length}
                 </span>
               )}
             </NavLink>

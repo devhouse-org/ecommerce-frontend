@@ -14,6 +14,9 @@ import OrdersPage from "./pages/orders";
 import WishlistPage from "./pages/WishlistPage";
 import Profile from "./pages/Profile"; // Import the new Profile component
 import { useAuthStore } from "./store/index";
+import Comparison from "./pages/Comparison";
+import Auctions from "./pages/Auctions";
+import AuctionDetails from "./pages/AuctionDetails";
 
 function App() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -36,6 +39,9 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/comparison" element={<Comparison />} />
+          <Route path="/auctions" element={<Auctions />} />
+          <Route path="/auction/:id" element={<AuctionDetails />} />
         </Routes>
       </main>
       <MyFooter />

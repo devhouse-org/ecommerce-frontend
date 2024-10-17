@@ -1,4 +1,4 @@
-import { CartState, WishlistState, ProductListProps } from "@/utils/types";
+import { CartState, WishlistState, ProductListProps, ComparisonState } from "@/utils/types";
 import { create } from "zustand";
 
 // Create the Zustand store
@@ -101,5 +101,32 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem("email");
     localStorage.removeItem("cart");
     set({ isAuthenticated: false });
+  },
+}));
+
+export const useComparisonStore = create<ComparisonState>((set) => ({
+  comparisonList: JSON.parse(localStorage.getItem("comparisonList") || "[]"),
+
+  addToComparison: (product: ProductListProps) =>
+    set((state) => {
+      const isProductInComparison = state.comparisonList.some((item) => item.id === product.id);
+      if (!isProductInComparison) {
+        const newComparisonList = [...state.comparisonList, product];
+        localStorage.setItem("comparisonList", JSON.stringify(newComparisonList));
+        return { comparisonList: newComparisonList };
+      }
+      return state;
+    }),
+
+  removeFromComparison: (productId: string) =>
+    set((state) => {
+      const updatedComparisonList = state.comparisonList.filter((item) => item.id !== productId);
+      localStorage.setItem("comparisonList", JSON.stringify(updatedComparisonList));
+      return { comparisonList: updatedComparisonList };
+    }),
+
+  clearComparison: () => {
+    localStorage.removeItem("comparisonList");
+    set({ comparisonList: [] });
   },
 }));
