@@ -12,7 +12,7 @@ import Register from "./pages/Register";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import OrdersPage from "./pages/orders";
 import WishlistPage from "./pages/WishlistPage";
-import Profile from "./pages/Profile"; // Import the new Profile component
+import Profile from "./pages/Profile";
 import { useAuthStore } from "./store/index";
 import Comparison from "./pages/Comparison";
 import Auctions from "./pages/Auctions";
@@ -28,6 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/auctions" element={<Auctions />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/wishlist" element={<WishlistPage />} />

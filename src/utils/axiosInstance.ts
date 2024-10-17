@@ -9,7 +9,6 @@ const axiosInstance = axios.create({
     Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`, // Use API key from .env
   },
 });
-
 // Interceptors (same as before)
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -37,3 +36,4 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
+

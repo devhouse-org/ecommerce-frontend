@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import axiosInstance from '@/utils/axiosInstance';
 
 interface Auction {
@@ -19,7 +20,11 @@ interface Auction {
   subscribers: {
     id: string;
     price: number;
-    userId: string;
+    user: {
+      id: string;
+      name: string;
+      image: string;
+    };
   }[];
 }
 
@@ -77,7 +82,8 @@ const AuctionDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const lastBid = auction.subscribers[auction.subscribers.length - 1]?.price || auction.startPrice;
+  const lastBid = auction.subscribers[0]; // The first subscriber is the highest bidder
+  const currentBidAmount = lastBid?.price || auction.startPrice;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -86,7 +92,23 @@ const AuctionDetails: React.FC = () => {
         <div className="p-6">
           <h1 className="text-3xl font-bold mb-4">{auction.product.name}</h1>
           <p className="text-gray-600 mb-4">{auction.product.description}</p>
-          <p className="text-xl font-semibold mb-2">Current Bid: ${lastBid}</p>
+          <p className="text-xl font-semibold mb-2">Current Bid: ${currentBidAmount}</p>
+          {lastBid && lastBid.user && (
+            <div className="flex items-center space-x-2 mb-2">
+              <Avatar>
+                <AvatarImage src={lastBid.user.image} alt={lastBid.user.name} />
+                <AvatarFallback>{lastBid.user.name ? lastBid.user.name.slice(0, 2).toUpperCase() : 'U'}</AvatarFallback>
+              </Avatar>
+              <p className="text-gray-600">
+                Highest Bidder: {lastBid.user.name || 'Anonymous'}
+              </p>
+            </div>
+          )}
+          {lastBid && !lastBid.user && (
+            <p className="text-gray-600 mb-2">
+              Highest Bidder: Anonymous
+            </p>
+          )}
           <p className="text-gray-600 mb-2">Start Price: ${auction.startPrice}</p>
           <p className="text-gray-600 mb-2">End Price: ${auction.endPrice}</p>
           <p className="text-gray-600 mb-4">Ends: {new Date(auction.endTime).toLocaleString()}</p>
@@ -104,7 +126,7 @@ const AuctionDetails: React.FC = () => {
                   type="number"
                   value={bidAmount}
                   onChange={(e) => setBidAmount(Number(e.target.value))}
-                  min={lastBid + 1}
+                  min={currentBidAmount + 1}
                   step="0.01"
                 />
                 <div className="flex flex-wrap gap-2 mt-2">

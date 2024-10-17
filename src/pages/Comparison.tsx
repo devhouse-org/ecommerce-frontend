@@ -1,11 +1,25 @@
-import React from 'react';
+import { ProductT } from '@/utils/types';
 import { useComparisonStore } from '../store/index';
 import { X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useQueries } from '@tanstack/react-query';
+import axiosInstance from '@/utils/axiosInstance';
 
 const Comparison = () => {
   const { comparisonList, removeFromComparison } = useComparisonStore();
 
+  const ratingQueries = useQueries({
+    queries: comparisonList.map((product: ProductT) => ({
+      queryKey: ['ratings', product.id],
+      queryFn: async () => {
+        const response = await axiosInstance.get(`/rate?productId=${product.id}`);
+        return response.data;
+      },
+    })),
+  });
+  ratingQueries.map((query) => {
+    console.log(query.data);
+  });
   return (
     <div className="container mx-auto px-4 pt-28">
       <h1 className="text-3xl font-bold mb-8">Product Comparison</h1>
@@ -17,7 +31,7 @@ const Comparison = () => {
             <thead>
               <tr>
                 <th className="border p-2">Feature</th>
-                {comparisonList.map((product) => (
+                {comparisonList.map((product: ProductT) => (
                   <th key={product.id} className="border p-2">
                     <div className="flex justify-between items-center">
                       <span>{product.name}</span>
@@ -35,7 +49,7 @@ const Comparison = () => {
             <tbody>
               <tr>
                 <td className="border p-2 font-bold">Image</td>
-                {comparisonList.map((product) => (
+                {comparisonList.map((product: ProductT) => (
                   <td key={product.id} className="border p-2">
                     <img src={product.image} alt={product.name} className="w-32 h-32 object-cover mx-auto" />
                   </td>
@@ -43,19 +57,25 @@ const Comparison = () => {
               </tr>
               <tr>
                 <td className="border p-2 font-bold">Price</td>
-                {comparisonList.map((product) => (
+                {comparisonList.map((product: ProductT) => (
                   <td key={product.id} className="border p-2">${product.price.toFixed(2)}</td>
                 ))}
               </tr>
               <tr>
                 <td className="border p-2 font-bold">Description</td>
-                {comparisonList.map((product) => (
+                {comparisonList.map((product: ProductT) => (
                   <td key={product.id} className="border p-2">{product.description}</td>
                 ))}
               </tr>
               <tr>
+                <td className="border p-2 font-bold">Rating</td>
+                {ratingQueries.map((query) => (
+                  <td key={query.data?.id} className="border p-2">{query.data?.score}</td>
+                ))}
+              </tr>
+              <tr>
                 <td className="border p-2 font-bold">Action</td>
-                {comparisonList.map((product) => (
+                {comparisonList.map((product: ProductT) => (
                   <td key={product.id} className="border p-2">
                     <Link
                       to={`/product/${product.id}`}

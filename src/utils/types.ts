@@ -26,13 +26,14 @@ export type Category = {
   name: string;
 };
 
-export type ProductT = {
+export interface ProductT {
   id: string;
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
-};
+  image: string;
+  rating: number; // Add this line
+}
 
 export interface ProductListProps extends CartItem {
 }
