@@ -11,10 +11,17 @@ const ProductDetail = () => {
   const [userRating, setUserRating] = useState(0);
   const [comment, setComment] = useState("");
   const [hasRated, setHasRated] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
   const queryClient = useQueryClient();
 
   const fetchProductById = async (productId: string) => {
     const response = await axiosInstance.get(`/product/${productId}`);
+    return response.data;
+  };
+
+  const fetchVariantsById = async (productId: string) => {
+    const response = await axiosInstance.get(`/variant/product/${productId}`);
     return response.data;
   };
 
@@ -31,6 +38,11 @@ const ProductDetail = () => {
     queryFn: () => fetchProductById(id!),
   });
 
+  const { data: variants } = useQuery<any[]>({
+    queryKey: ["variant", id],
+    queryFn: () => fetchVariantsById(id!),
+  });
+
   const { data: userHasRated } = useQuery<boolean>({
     queryKey: ["userRating", id],
     queryFn: () => checkUserRating(id!),
@@ -43,8 +55,11 @@ const ProductDetail = () => {
   }, [userHasRated]);
 
   const rateMutation = useMutation({
-    mutationFn: (ratingData: { productId: string; score: number; comment: string }) =>
-      axiosInstance.post("/rate", ratingData),
+    mutationFn: (ratingData: {
+      productId: string;
+      score: number;
+      comment: string;
+    }) => axiosInstance.post("/rate", ratingData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["product", id] });
       setHasRated(true);
@@ -61,7 +76,6 @@ const ProductDetail = () => {
     }
   };
 
-  // Add this function to safely get the average rating
   const getAverageRating = (ratings: any[] | undefined) => {
     if (!ratings || ratings.length === 0) return 0;
     const sum = ratings.reduce((acc, rating) => acc + rating.score, 0);
@@ -84,8 +98,15 @@ const ProductDetail = () => {
     );
   }
 
-  const quantityInCart = cart.find((item) => item.id === product.id)?.quantity || 0;
+  const quantityInCart =
+    cart.find((item) => item.id === product.id)?.quantity || 0;
   const averageRating = getAverageRating(product.ratings);
+
+  // Grouping variants into colors and sizes
+  const colors =
+    variants?.find((variant) => variant.name === "Color")?.values || [];
+  const sizes =
+    variants?.find((variant) => variant.name === "Size")?.values || [];
 
   return (
     <div className="container mx-auto pt-20 px-4 md:px-6 lg:px-8">
@@ -103,7 +124,9 @@ const ProductDetail = () => {
 
         {/* Product Details */}
         <div className="lg:w-1/2">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">{product.name}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            {product.name}
+          </h1>
           <div className="flex items-center mb-4">
             <div className="flex text-yellow-400">
               {[...Array(5)].map((_, i) => (
@@ -118,15 +141,59 @@ const ProductDetail = () => {
               ({averageRating.toFixed(1)})
             </span>
           </div>
-          <p className="text-2xl font-semibold text-green-600 mb-4">${product.price.toFixed(2)}</p>
+          <p className="text-2xl font-semibold text-green-600 mb-4">
+            ${product.price.toFixed(2)}
+          </p>
           <p className="mb-6 text-gray-700">{product.description}</p>
+
+          {/* Color Variant Section */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-2">Choose a color:</h3>
+            <div className="flex space-x-2">
+              {colors.map((color: any) => (
+                <button
+                  key={color.id}
+                  className={`w-8 h-8 rounded-full border-2 ${
+                    selectedColor === color.name
+                      ? "border-black"
+                      : "border-gray-300"
+                  }`}
+                  style={{ backgroundColor: color.name.toLowerCase() }}
+                  onClick={() => setSelectedColor(color.name)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Size Selection Section */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-2">Choose a size:</h3>
+            <div className="flex space-x-2">
+              {sizes.map((size: any) => (
+                <button
+                  key={size.id}
+                  className={`px-4 py-2 border rounded ${
+                    selectedSize === size.name
+                      ? "bg-black text-white"
+                      : "bg-white text-black"
+                  }`}
+                  onClick={() => setSelectedSize(size.name)}
+                >
+                  {size.name}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Add to Cart Section */}
           <div className="flex items-center mb-6">
             {quantityInCart === 0 ? (
               <button
                 className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded-full px-6 py-3 transition-colors duration-300"
-                onClick={() => addToCart(product, 1)}
+                onClick={() =>
+                  addToCart({ ...product, selectedColor, selectedSize }, 1)
+                }
+                disabled={!selectedColor || !selectedSize}
               >
                 <ShoppingCart size={20} className="mr-2" />
                 Add to Cart
@@ -172,34 +239,35 @@ const ProductDetail = () => {
             {!hasRated ? (
               <div>
                 <div className="flex items-center mb-4">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      size={24}
-                      className={`cursor-pointer ${
-                        star <= userRating ? "text-yellow-400 fill-current" : "text-gray-300"
-                      }`}
-                      onClick={() => setUserRating(star)}
-                      fill={star <= userRating ? "currentColor" : "none"}
-                    />
-                  ))}
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={30}
+                        className="cursor-pointer"
+                        fill={i < userRating ? "currentColor" : "none"}
+                        onClick={() => setUserRating(i + 1)}
+                      />
+                    ))}
+                  </div>
+                  <span className="ml-2">{userRating}/5</span>
                 </div>
                 <textarea
-                  className="w-full p-2 border rounded mb-4"
-                  placeholder="Leave a comment (optional)"
+                  className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                  rows={4}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
+                  placeholder="Leave a comment"
                 />
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
                   onClick={handleRating}
-                  disabled={userRating === 0}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-colors duration-300"
                 >
-                  Submit Rating
+                  Submit
                 </button>
               </div>
             ) : (
-              <p>You have already rated this product.</p>
+              <p className="text-green-600">Thank you for your rating!</p>
             )}
           </div>
         </div>

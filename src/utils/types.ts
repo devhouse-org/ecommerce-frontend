@@ -34,5 +34,4 @@ export type ProductT = {
   imageUrl: string;
 };
 
-export interface ProductListProps extends CartItem {
-}
+export interface ProductListProps extends CartItem {}

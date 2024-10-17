@@ -60,7 +60,9 @@ export const useWishlistStore = create<WishlistState>((set) => ({
 
   addToWishlist: (product: ProductListProps) =>
     set((state) => {
-      const isProductInWishlist = state.wishlist.some((item) => item.id === product.id);
+      const isProductInWishlist = state.wishlist.some(
+        (item) => item.id === product.id
+      );
       if (!isProductInWishlist) {
         const newWishlist = [...state.wishlist, product];
         localStorage.setItem("wishlist", JSON.stringify(newWishlist));
@@ -71,7 +73,9 @@ export const useWishlistStore = create<WishlistState>((set) => ({
 
   removeFromWishlist: (productId: string) =>
     set((state) => {
-      const updatedWishlist = state.wishlist.filter((item) => item.id !== productId);
+      const updatedWishlist = state.wishlist.filter(
+        (item) => item.id !== productId
+      );
       localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
       return { wishlist: updatedWishlist };
     }),
