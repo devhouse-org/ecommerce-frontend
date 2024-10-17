@@ -4,8 +4,7 @@ import { useCartStore, useAuthStore, useWishlistStore, useComparisonStore } from
 import { ShoppingCart, Heart, Menu, X, Home, Package, User, Trash2, Scale } from "lucide-react";
 import CartPopup from "./CartPopup";
 import UserProfileAvatar from "./UserProfileAvatar";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
-import { Button } from "./ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 
 const Navbar = () => {
   const { cart, removeFromCart, updateQuantity } = useCartStore();
@@ -20,7 +19,6 @@ const Navbar = () => {
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
   const wishlistItemCount = wishlist.length;
 
-  const togglePopup = () => setPopupOpen(!isPopupOpen);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   useEffect(() => {
