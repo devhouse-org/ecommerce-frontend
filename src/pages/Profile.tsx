@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axiosInstance from "@/utils/axiosInstance";
 import { toast } from "sonner";
+import { Coins } from "lucide-react";
 
 const userProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -113,10 +114,6 @@ export default function Settings() {
     setImagePreview(profileData?.image ? profileData.image : undefined);
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="container mx-auto p-6">      
       <Card className="w-full max-w-2xl mx-auto">
@@ -137,6 +134,25 @@ export default function Settings() {
                 <Input type="file" onChange={handleImageChange} accept="image/*" />
               )}
             </div>
+            
+            {/* Updated points display without animation */}
+            <Card className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <Coins size={32} className="text-yellow-200" />
+                    <div>
+                      <p className="text-sm font-semibold uppercase">Your Points</p>
+                      <p className="text-3xl font-bold">{profileData?.points?.toLocaleString() || '0'}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold">Level</p>
+                    <p className="text-2xl font-bold">{Math.floor((profileData?.points || 0) / 1000) + 1}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
