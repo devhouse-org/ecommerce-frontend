@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCartStore } from "../store/index";
 import axiosInstance from "@/utils/axiosInstance";
 import Spinner from "@/components/Spinner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ShoppingCart, Star, Truck, RefreshCw } from "lucide-react";
-import { CartItem } from "@/utils/types";
+import { ShoppingCart, Star, Truck, RefreshCw, ChevronDown } from "lucide-react";
+import { CartItem, Variant, Value } from "@/utils/types";
 
 const ProductDetail = () => {
   const [userRating, setUserRating] = useState(0);
   const [comment, setComment] = useState("");
   const [hasRated, setHasRated] = useState(false);
   const queryClient = useQueryClient();
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
 
   const fetchProductById = async (productId: string) => {
     const response = await axiosInstance.get(`/product/${productId}`);
@@ -68,6 +70,22 @@ const ProductDetail = () => {
     return sum / ratings.length;
   };
 
+  const handleVariantChange = (variantId: string, valueId: string) => {
+    setSelectedVariants(prev => ({ ...prev, [variantId]: valueId }));
+    
+    // Find the selected variant value
+    const selectedVariant = product?.variants?.find(v => v.id === variantId);
+    const selectedValue = selectedVariant?.values.find(v => v.id === valueId);
+    
+    // Update the current image if the selected value has an image
+    if (selectedValue?.image) {
+      setCurrentImage(selectedValue.image);
+    } else {
+      // Reset to the main product image if the selected value doesn't have an image
+      setCurrentImage(null);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -95,7 +113,7 @@ const ProductDetail = () => {
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <img
               className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105"
-              src={product.image}
+              src={currentImage || product.image}
               alt={product.name}
             />
           </div>
@@ -121,11 +139,41 @@ const ProductDetail = () => {
           <p className="text-2xl font-semibold text-green-600 mb-4">${product.price.toFixed(2)}</p>
           <p className="mb-6 text-gray-700">{product.description}</p>
 
+          {/* Variants Section */}
+          {product.variants && product.variants.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-4">Product Options</h3>
+              {product.variants.map((variant: Variant) => (
+                <div key={variant.id} className="mb-6">
+                  <label className="block text-lg font-bold text-gray-700 mb-2">
+                    {variant.name}
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {variant.values.map((value: Value) => (
+                      <button
+                        key={value.id}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+                          selectedVariants[variant.id] === value.id
+                            ? 'bg-indigo-600 text-white'
+                            : 'bg-gray-200 text-gray-800 hover:bg-indigo-100'
+                        }`}
+                        onClick={() => handleVariantChange(variant.id, value.id)}
+                      >
+                        {value.name}
+                        {value.price && ` (+$${parseFloat(value.price).toFixed(2)})`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Add to Cart Section */}
           <div className="flex items-center mb-6">
             {quantityInCart === 0 ? (
               <button
-                className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded-full px-6 py-3 transition-colors duration-300"
+                className="flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-6 py-3 transition-colors duration-300"
                 onClick={() => addToCart(product, 1)}
               >
                 <ShoppingCart size={20} className="mr-2" />

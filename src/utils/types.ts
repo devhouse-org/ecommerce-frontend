@@ -37,3 +37,20 @@ export interface ProductT {
 
 export interface ProductListProps extends CartItem {
 }
+export interface Variant {
+  id: string;
+  name: string;
+  values: Value[];
+}
+
+export interface Value {
+  id: string;
+  name: string;
+  price: string | null;
+  image: string | null;
+}
+
+export interface CartItem {
+  // ... (existing properties)
+  variants?: Variant[];
+}
