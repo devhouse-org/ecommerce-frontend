@@ -76,7 +76,7 @@ const Navbar = () => {
             <div className="hidden md:flex items-center space-x-8">
               <NavItem to="/">Home</NavItem>
               <NavItem to="/products">Products</NavItem>
-              <NavItem to="/auctions">Auctions</NavItem>
+              {/* <NavItem to="/auctions">Auctions</NavItem> */}
 
               <NavLink to="/wishlist" className="text-white relative focus:outline-none hover:text-green-400 transition duration-300">
                 <Heart size={24} />
@@ -86,14 +86,14 @@ const Navbar = () => {
                   </span>
                 )}
               </NavLink>
-              <NavLink to="/comparison" className="text-white relative focus:outline-none hover:text-green-400 transition duration-300">
+              {/* <NavLink to="/comparison" className="text-white relative focus:outline-none hover:text-green-400 transition duration-300">
                 <Scale size={24} />
                 {comparisonList.length > 0 && (
                   <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                     {comparisonList.length}
                   </span>
                 )}
-              </NavLink>
+              </NavLink> */}
               <Sheet>
                 <SheetTrigger asChild>
                   <button className="text-white relative focus:outline-none hover:text-green-400 transition duration-300">
