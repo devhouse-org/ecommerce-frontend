@@ -1,46 +1,47 @@
 import { Link } from "react-router-dom";
-type Props = {};
 
-const Home = ({}: Props) => {
-  const clothingBrands = [
+const Home = () => {
+  const watchCategories = [
     {
       id: 1,
-      title: "Dante Grey DB Luxury Coat",
-      img: "https://schoffa.com/cdn/shop/files/Schoffa-103-5.jpg?v=1717066632&width=2000",
+      title: "Luxury Watches",
+      img: "hero.jpg",
       description:
-        "High-end, premium brands known for their quality craftsmanship, exclusive designs, and expensive pricing. These brands often use luxurious materials and are frequently seen on runways.",
+        "Premium timepieces crafted with exceptional materials and sophisticated movements. These watches represent the pinnacle of horological excellence.",
     },
     {
       id: 2,
-      title: "Tuxedo",
-      img: "https://schoffa.com/cdn/shop/files/Schoffa-103-5.jpg?v=1717066632&width=2000",
+      title: "Sport Watches",
+      img: "hero2.png",
       description:
-        "Urban fashion brands that cater to youth culture with bold designs, casual wear, and strong influences from hip-hop, skateboarding, and sports. These brands emphasize comfort and individuality.",
+        "Durable and functional timepieces designed for active lifestyles. Features include water resistance, chronographs, and robust construction.",
     },
     {
       id: 3,
-      title: "Wedding Suits",
-      img: "https://schoffa.com/cdn/shop/files/Schoffa-103-5.jpg?v=1717066632&width=2000",
+      title: "Smart Watches",
+      img: "hero3.png",
       description:
-        "Eco-friendly and ethically produced brands focusing on environmentally conscious materials, fair labor practices, and reducing their carbon footprint while still delivering stylish clothing.",
+        "Modern watches combining traditional timepiece elegance with advanced technology. Perfect for staying connected while maintaining style.",
     },
   ];
+
   return (
     <>
       <div className="h-[100vh] lg:h-[80vh] flex justify-center bg-black/95">
         <div className="header px-8 container mx-auto relative">
           <div className="absolute bottom-[-200px] left-[-400px] w-[250px] h-[250px] bg-white/50 blur-[110px] rounded-full" />
-          <div className="flex  flex-col-reverse lg:flex-row h-full gap-x-4">
+          <div className="flex flex-col-reverse lg:flex-row h-full gap-x-4">
             <div className="content flex-1 flex flex-col justify-start lg:justify-center text-center lg:text-left">
-              <h3 className="font-bold text-md text-gray-50/75 ">
-                New Product
+              <h3 className="font-bold text-md text-gray-50/75">
+                New Collection
               </h3>
               <h1 className="text-4xl mb-4 mt-1 font-bold text-brown-50 text-white">
-                Coton Fabric
+                Luxury Timepieces
               </h1>
-              <p className="max-w-[75%] text-white/75  self-center lg:self-auto">
-                Stay warm in our new, easy-care sweaters. Perfect for dressing
-                up or down, while staying comfortable all season long.
+              <p className="max-w-[75%] text-white/75 self-center lg:self-auto">
+                Discover our curated collection of exceptional watches. From
+                classic elegance to modern innovation, find the perfect
+                timepiece to elevate your style.
               </p>
               <Link
                 to={"/products"}
@@ -49,12 +50,12 @@ const Home = ({}: Props) => {
                 See Products
               </Link>
             </div>
-            <div className="flex-1 flex justify-center lg:justify-end  items-center">
+            <div className="flex-1 flex justify-center lg:justify-end items-center">
               <div className="img-container h-[70%] w-full max-w-[500px] rounded-md overflow-hidden">
                 <img
                   className="w-full h-full object-cover hover:scale-[1.11] duration-[.9s] transition ease-in-out"
-                  src="https://cdn.shopify.com/s/files/1/1368/3463/files/Stachehaus_E2_84_A2_Cuts_Fall24_LA-321_450x_crop_center@2x.progressive.jpg?v=1726606783"
-                  alt=""
+                  src="hero2.png"
+                  alt="Luxury Watch"
                 />
               </div>
             </div>
@@ -65,11 +66,11 @@ const Home = ({}: Props) => {
       <div className="container mx-auto px-8 my-20">
         <div className="flex justify-center">
           <h3 className="font-bold text-[24px] text-gray-800 mb-4">
-            Best Sellers
+            Featured Collections
           </h3>
         </div>
         <div className="best_sellers_categories flex gap-y-4 flex-wrap justify-between gap-x-4">
-          {clothingBrands.map((item) => (
+          {watchCategories.map((item) => (
             <div
               key={item.id}
               className="flex-1 card m-auto text-gray-300 w-[clamp(260px,80%,300px)] hover:brightness-90 transition-all cursor-pointer group bg-gradient-to-tl from-gray-900 to-gray-950 hover:from-gray-800 hover:to-gray-950 border-r-2 border-t-2 border-gray-900 rounded-lg relative"
@@ -100,27 +101,30 @@ const Home = ({}: Props) => {
       </div>
 
       <div className="container mx-auto px-8">
-        {/* ZX7 Speaker */}
-        <div className="h-[400px] mb-4 w-full rounded-md overflow-hidden">
-          <img
-            src="https://cdn.shopify.com/s/files/1/1368/3463/files/Artboard_201_20copy_205_13d61b79-809d-40bf-ac72-22cc43767843_1440x_crop_center@2x.progressive.jpg?v=1726528926" // Replace with actual image source
-            className="w-full h-full object-cover hover:scale-[1.11] duration-[.9s] transition ease-in-out"
-          />
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            Timeless Elegance
+          </h2>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Discover our collection of exceptional timepieces, where traditional
+            craftsmanship meets modern innovation
+          </p>
         </div>
 
-        {/* YX1 Earphones */}
+     
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="rounded-md overflow-hidden max-h-[600px]">
             <img
-              src="https://cdn.shopify.com/s/files/1/1368/3463/files/hp-mens-tops-4-tile_450x_crop_center@2x.progressive.jpg?v=1717692158" // Replace with actual image source
-              alt="YX1 Earphones"
+              src="wh.jpeg"
+              alt="Classic Watches"
               className="w-full h-full object-cover hover:scale-[1.11] duration-[.9s] transition ease-in-out"
             />
           </div>
           <div className="rounded-md overflow-hidden max-h-[600px]">
             <img
-              src="https://cdn.shopify.com/s/files/1/1368/3463/files/AOSeries_Homepage_4-Block_3x4_Shorts_26Pants_450x_crop_center@2x.progressive.webp?v=1710159897" // Replace with actual image source
-              alt="YX1 Earphones"
+              src="sport.png"
+              alt="Sport Watches"
               className="w-full h-full object-cover hover:scale-[1.11] duration-[.9s] transition ease-in-out"
             />
           </div>

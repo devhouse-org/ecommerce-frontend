@@ -7,10 +7,14 @@ import {
   Scale,
 } from "lucide-react";
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom"; // Import Link for routing
+import { Link, useNavigate } from "react-router-dom"; // Import Link for routing and useNavigate for navigation
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 import axiosInstance from "../utils/axiosInstance";
-import { useCartStore, useWishlistStore, useComparisonStore } from "../store/index";
+import {
+  useCartStore,
+  useWishlistStore,
+  useComparisonStore,
+} from "../store/index";
 import Spinner from "@/components/Spinner";
 import { Category, ProductListProps } from "@/utils/types";
 
@@ -19,24 +23,31 @@ const fetchCategories = async () => {
   return response.data;
 };
 
-
 const Products = () => {
-  const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery<
+    Category[]
+  >({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
   const [searchTerm, setSearchTerm] = useState("");
   const { addToCart, cart, removeFromCart, updateQuantity } = useCartStore(); // Access Zustand store
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    string | undefined
+  >(undefined);
   const categoriesRef = useRef<HTMLDivElement>(null);
   const { addToWishlist, removeFromWishlist, wishlist } = useWishlistStore();
-  const { addToComparison, removeFromComparison, comparisonList } = useComparisonStore();
+  const { addToComparison, removeFromComparison, comparisonList } =
+    useComparisonStore();
+  const navigate = useNavigate();
 
-  const { data: products = [], isLoading: productsLoading } = useQuery<ProductListProps[]>({
+  const { data: products = [], isLoading: productsLoading } = useQuery<
+    ProductListProps[]
+  >({
     queryKey: ["products", selectedCategoryId],
     queryFn: async ({ queryKey }) => {
       const [_, categoryId] = queryKey;
-      const url = categoryId ? `/product/category/${categoryId}` : '/product';
+      const url = categoryId ? `/product/category/${categoryId}` : "/product";
       const response = await axiosInstance.get(url);
       return response.data;
     },
@@ -47,16 +58,19 @@ const Products = () => {
     if (!categoriesRef.current) return;
 
     const container = categoriesRef.current;
-    const selectedButton = container.querySelector(`[data-category-id="${categoryId}"]`) as HTMLElement;
+    const selectedButton = container.querySelector(
+      `[data-category-id="${categoryId}"]`
+    ) as HTMLElement;
 
     if (selectedButton) {
       const containerWidth = container.offsetWidth;
       const buttonWidth = selectedButton.offsetWidth;
-      const scrollLeft = selectedButton.offsetLeft - containerWidth / 2 + buttonWidth / 2;
+      const scrollLeft =
+        selectedButton.offsetLeft - containerWidth / 2 + buttonWidth / 2;
 
       container.scrollTo({
         left: scrollLeft,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
@@ -76,8 +90,6 @@ const Products = () => {
     );
   }
 
-
-
   // Function to get the quantity of a specific product in the cart
   const getQuantityInCart = (productId: string) => {
     const cartItem = cart.find((item) => item.id === productId);
@@ -91,9 +103,11 @@ const Products = () => {
       product.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const isInWishlist = (productId: string) => wishlist.some((item: { id: string }) => item.id === productId);
+  const isInWishlist = (productId: string) =>
+    wishlist.some((item: { id: string }) => item.id === productId);
 
-  const isInComparison = (productId: string) => comparisonList.some((item: { id: string }) => item.id === productId);
+  const isInComparison = (productId: string) =>
+    comparisonList.some((item: { id: string }) => item.id === productId);
 
   return (
     <>
@@ -141,10 +155,11 @@ const Products = () => {
           <button
             data-category-id="undefined"
             onClick={() => handleCategorySelect(undefined)}
-            className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${selectedCategoryId === undefined
+            className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${
+              selectedCategoryId === undefined
                 ? "text-white bg-green-600 shadow-md hover:bg-green-700"
                 : "text-gray-700 bg-gray-100 hover:bg-gray-200"
-              }`}
+            }`}
           >
             All Products
           </button>
@@ -153,10 +168,11 @@ const Products = () => {
               key={category.id}
               data-category-id={category.id}
               onClick={() => handleCategorySelect(category.id)}
-              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${selectedCategoryId === category.id
+              className={`text-sm font-medium rounded-full px-3 py-2 transition-all duration-300 ease-in-out flex-shrink-0 mr-3 ${
+                selectedCategoryId === category.id
                   ? "text-white bg-green-600 shadow-md hover:bg-green-700"
                   : "text-gray-700 bg-gray-100 hover:bg-gray-200"
-                }`}
+              }`}
             >
               {category.name}
             </button>
@@ -172,54 +188,64 @@ const Products = () => {
 
       {/* Card Section */}
       <div className="container mx-auto mt-10 px-4">
-        {
-          productsLoading ? (
-            <div className="flex justify-center items-center h-screen self-center mx-auto">
-              <Spinner />
-            </div>
-          ) : (
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredProducts.map((product) => {
-                const quantityInCart = getQuantityInCart(product.id);
-                const productInWishlist = isInWishlist(product.id);
-                return (
-                  <div
-                    key={product.id}
-                    className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+        {productsLoading ? (
+          <div className="flex justify-center items-center h-screen self-center mx-auto">
+            <Spinner />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => {
+              const quantityInCart = getQuantityInCart(product.id);
+              const productInWishlist = isInWishlist(product.id);
+              return (
+                <div
+                  key={product.id}
+                  className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+                >
+                  <Link
+                    to={`/product/${product.id}`}
+                    className="block overflow-hidden"
                   >
-                    <Link
-                      to={`/product/${product.id}`}
-                      className="block overflow-hidden"
-                    >
-                      <img
-                        className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
-                        src={product.image}
-                        alt={product.name}
-                      />
+                    <img
+                      className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
+                      src={product.image}
+                      alt={product.name}
+                    />
+                  </Link>
+                  <div className="p-4">
+                    <Link to={`/product/${product.id}`}>
+                      <h3 className="font-semibold text-lg mb-2 hover:text-green-600 transition-colors">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                        {product.description}
+                      </p>
+                      <p className="font-bold text-lg text-green-600">
+                        ${product.price.toFixed(2)}
+                      </p>
                     </Link>
-                    <div className="p-4">
-                      <Link to={`/product/${product.id}`}>
-                        <h3 className="font-semibold text-lg mb-2 hover:text-green-600 transition-colors">
-                          {product.name}
-                        </h3>
-                        <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-                          {product.description}
-                        </p>
-                        <p className="font-bold text-lg text-green-600">
-                          ${product.price.toFixed(2)}
-                        </p>
-                      </Link>
-                    </div>
-                    <div className="px-4 py-3 bg-gray-50 flex items-center justify-between">
+                  </div>
+                  <div className="px-4 py-3 bg-gray-50 flex items-center justify-between">
+                    <div className="flex gap-2">
                       {quantityInCart === 0 ? (
-                        <button
-                          className="flex items-center justify-center bg-green-600 hover:bg-green-600 text-white rounded-full px-4 py-1.5 transition-colors duration-300"
-                          onClick={() => addToCart(product, 1)} // Add to cart with quantity 1
-                        >
-                          <ShoppingCart size={18} className="mr-2" />
-                          Add to Cart
-                        </button>
+                        <>
+                          <button
+                            className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded-full px-4 py-1.5 transition-colors duration-300"
+                            onClick={() => addToCart(product, 1)}
+                          >
+                            <ShoppingCart size={18} className="mr-2" />
+                            Add to Cart
+                          </button>
+                          <button
+                            className="flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full px-4 py-1.5 transition-colors duration-300"
+                            onClick={() => {
+                              addToCart(product, 1);
+                              navigate("/checkout");
+                            }}
+                          >
+                            Buy Now
+                          </button>
+                        </>
                       ) : (
                         <div className="flex items-center bg-gray-200 rounded-full">
                           <button
@@ -227,7 +253,10 @@ const Products = () => {
                             onClick={() => {
                               quantityInCart === 1
                                 ? removeFromCart(product.id)
-                                : updateQuantity(product.id, quantityInCart - 1);
+                                : updateQuantity(
+                                    product.id,
+                                    quantityInCart - 1
+                                  );
                             }}
                           >
                             -
@@ -245,28 +274,48 @@ const Products = () => {
                           </button>
                         </div>
                       )}
+                    </div>
 
-                      <div className="flex space-x-2">
-                        <button
-                          className={`text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-200 ${productInWishlist ? 'text-red-500' : ''}`}
-                          onClick={() => productInWishlist ? removeFromWishlist(product.id) : addToWishlist(product)}
-                        >
-                          <Heart size={20} fill={productInWishlist ? 'currentColor' : 'none'} />
-                        </button>
-                        <button
-                          className={`text-gray-600 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-gray-200 ${isInComparison(product.id) ? 'text-blue-500' : ''}`}
-                          onClick={() => isInComparison(product.id) ? removeFromComparison(product.id) : addToComparison(product)}
-                        >
-                          <Scale size={20} fill={isInComparison(product.id) ? 'currentColor' : 'none'} />
-                        </button>
-                      </div>
+                    <div className="flex space-x-2">
+                      <button
+                        className={`text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-200 ${
+                          productInWishlist ? "text-red-500" : ""
+                        }`}
+                        onClick={() =>
+                          productInWishlist
+                            ? removeFromWishlist(product.id)
+                            : addToWishlist(product)
+                        }
+                      >
+                        <Heart
+                          size={20}
+                          fill={productInWishlist ? "currentColor" : "none"}
+                        />
+                      </button>
+                      <button
+                        className={`text-gray-600 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-gray-200 ${
+                          isInComparison(product.id) ? "text-blue-500" : ""
+                        }`}
+                        onClick={() =>
+                          isInComparison(product.id)
+                            ? removeFromComparison(product.id)
+                            : addToComparison(product)
+                        }
+                      >
+                        <Scale
+                          size={20}
+                          fill={
+                            isInComparison(product.id) ? "currentColor" : "none"
+                          }
+                        />
+                      </button>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )
-        }
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </>
   );
